@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Rapid Prototyping Tools - BMJ AI Rapid Prototype</title>
+
+  <!-- Required: Base styles -->
+  <link rel="stylesheet" href="bmj-pat-lib/assets/css/bmj-base.css">
+  <link rel="stylesheet" href="bmj-pat-lib/assets/css/bmj-typography.css">
+
+  <!-- Required: Header and Footer styles -->
+  <link rel="stylesheet" href="bmj-pat-lib/components/header/header.css">
+  <link rel="stylesheet" href="bmj-pat-lib/components/footer/footer.css">
+
+  <!-- Optional: Component styles -->
+  <link rel="stylesheet" href="bmj-pat-lib/components/buttons/buttons.css">
+  <link rel="stylesheet" href="bmj-pat-lib/components/cards/cards.css">
+
+  <style>
+    /* Custom styles for tools page */
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-violet) 100%);
+      color: white;
+      padding: 3rem 1rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .category-section {
+      margin-bottom: 4rem;
+    }
+
+    .category-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid var(--primary-color);
+    }
+
+    .category-title {
+      color: var(--primary-color);
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .category-description {
+      color: var(--gray-700);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .tool-card {
+      background: white;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tool-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    .tool-name {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .tool-url {
+      font-size: 0.9rem;
+      color: var(--secondary-violet);
+      margin-bottom: 1rem;
+      word-break: break-all;
+    }
+
+    .tool-url a {
+      color: var(--secondary-violet);
+      text-decoration: none;
+    }
+
+    .tool-url a:hover {
+      text-decoration: underline;
+    }
+
+    .tool-description {
+      color: var(--gray-700);
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .tool-highlight {
+      background: #fff8e6;
+      border-left: 4px solid #ffc107;
+      padding: 0.5rem 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--gray-700);
+    }
+
+    .key-distinctions {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 2rem;
+      border-radius: 12px;
+      margin-top: 3rem;
+    }
+
+    .key-distinctions h3 {
+      color: var(--primary-color);
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .distinctions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .distinction-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .distinction-title {
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .distinction-content {
+      color: var(--gray-700);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 1.8rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .category-title {
+        font-size: 1.5rem;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .distinctions-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- BMJ Header (Required) -->
+  <header class="bmj-header">
+    <div class="bmj-header-top">
+      <div class="bmj-container">
+        <div class="bmj-header-logo">
+          <a href="https://www.bmj.com">
+            <svg class="bmj-logo" width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="120" height="40" fill="#005EB8"/>
+              <text x="10" y="28" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">BMJ</text>
+            </svg>
+          </a>
+        </div>
+        <div class="bmj-header-actions">
+          <a href="https://www.bmj.com/search/advanced" class="bmj-header-link">Advanced search</a>
+          <a href="https://www.bmj.com/coronavirus" class="bmj-header-link">COVID-19</a>
+          <a href="https://myaccount.bmj.com" class="bmj-header-link">My Account</a>
+          <a href="https://www.bmj.com/user/login" class="bmj-header-link">Login</a>
+          <a href="https://www.bmj.com/subscribe" class="btn btn-primary btn-sm">Subscribe</a>
+        </div>
+      </div>
+    </div>
+    <nav class="bmj-header-nav">
+      <div class="bmj-container">
+        <ul class="bmj-nav-primary">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="https://www.bmj.com/research">Research</a></li>
+          <li><a href="https://www.bmj.com/education">Education</a></li>
+          <li><a href="https://www.bmj.com/news-views">News & Views</a></li>
+          <li><a href="https://www.bmj.com/campaigns">Campaigns</a></li>
+          <li><a href="https://www.bmj.com/jobs">Jobs</a></li>
+        </ul>
+        <ul class="bmj-nav-secondary">
+          <li><a href="https://www.bmj.com/archive">Archive</a></li>
+          <li><a href="https://www.bmj.com/authors">For authors</a></li>
+          <li><a href="https://www.bmj.com/company">Hosted</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="bmj-container">
+      <h1 class="hero-title">AI Rapid Prototyping Tools</h1>
+      <p class="hero-subtitle">
+        A comprehensive guide to the latest AI-powered development tools for rapid prototyping,
+        categorized by integration type and use case.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main>
+    <div class="bmj-container" style="padding: 0 1rem 3rem;">
+
+      <!-- Category 1: IDE-Based Tools -->
+      <section class="category-section">
+        <div class="category-header">
+          <h2 class="category-title">1. IDE-Based Tools</h2>
+          <p class="category-description">
+            AI assistants that integrate directly into your code editor, providing real-time suggestions and code completion.
+          </p>
+        </div>
+        <div class="tools-grid">
+          <div class="tool-card">
+            <h3 class="tool-name">GitHub Copilot</h3>
+            <div class="tool-url"><a href="https://github.com/features/copilot" target="_blank">github.com/features/copilot</a></div>
+            <p class="tool-description">The market leader in AI-powered code completion, works seamlessly across multiple IDEs including VS Code, JetBrains, and Neovim.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Cursor</h3>
+            <div class="tool-url"><a href="https://cursor.sh" target="_blank">cursor.sh</a></div>
+            <p class="tool-description">AI-first IDE with a complete environment built specifically for AI-powered coding.</p>
+            <div class="tool-highlight">$1B+ revenue - Industry leader</div>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Tabnine</h3>
+            <div class="tool-url"><a href="https://tabnine.com" target="_blank">tabnine.com</a></div>
+            <p class="tool-description">Enterprise-focused AI assistant with strong privacy controls and on-premises deployment options.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">JetBrains AI Assistant</h3>
+            <div class="tool-url"><a href="https://jetbrains.com/ai" target="_blank">jetbrains.com/ai</a></div>
+            <p class="tool-description">Native AI integration for all JetBrains IDEs including IntelliJ IDEA, PyCharm, and WebStorm.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Windsurf Editor</h3>
+            <div class="tool-url"><a href="https://codeium.com" target="_blank">codeium.com</a></div>
+            <p class="tool-description">"Build an app with one prompt" - Advanced AI editor with natural language app generation.</p>
+            <div class="tool-highlight">Acquired by Google</div>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Google Antigravity</h3>
+            <div class="tool-url"><a href="https://antigravity.google" target="_blank">antigravity.google</a></div>
+            <p class="tool-description">Agent-first IDE with multi-model support, enabling sophisticated AI-driven development workflows.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Eclipse Theia AI</h3>
+            <div class="tool-url"><a href="https://theia-ide.org" target="_blank">theia-ide.org</a></div>
+            <p class="tool-description">Open-source extensible framework for building custom cloud and desktop IDEs with AI capabilities.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Qodo (formerly CodiumAI)</h3>
+            <div class="tool-url"><a href="https://qodo.ai" target="_blank">qodo.ai</a></div>
+            <p class="tool-description">Specialized focus on code quality and automated testing, helping teams maintain high standards.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Kiro</h3>
+            <div class="tool-url"><a href="https://kiro.dev" target="_blank">kiro.dev</a></div>
+            <p class="tool-description">AWS spec-driven agentic IDE with powerful hooks and automation capabilities for cloud-native development.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category 2: CLI Tools -->
+      <section class="category-section">
+        <div class="category-header">
+          <h2 class="category-title">2. CLI Tools</h2>
+          <p class="category-description">
+            Terminal-based tools for developers comfortable with command line interfaces, offering powerful automation and scripting capabilities.
+          </p>
+        </div>
+        <div class="tools-grid">
+          <div class="tool-card">
+            <h3 class="tool-name">Claude Code CLI</h3>
+            <div class="tool-url"><a href="https://anthropic.com/claude-code" target="_blank">anthropic.com/claude-code</a></div>
+            <p class="tool-description">Anthropic's official terminal tool with sandboxing capabilities for secure AI-assisted development.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Gemini CLI</h3>
+            <div class="tool-url"><a href="https://cloud.google.com/vertex-ai" target="_blank">cloud.google.com/vertex-ai</a></div>
+            <p class="tool-description">Google's bash tool designed for agentic workflows, integrating with Vertex AI platform.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Codex CLI</h3>
+            <div class="tool-url"><a href="https://openai.com/codex" target="_blank">openai.com/codex</a></div>
+            <p class="tool-description">OpenAI's command-line interface for code generation and modification tasks.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Warp</h3>
+            <div class="tool-url"><a href="https://warp.dev" target="_blank">warp.dev</a></div>
+            <p class="tool-description">AI-powered terminal with built-in suggestions, blocks, and modern UX enhancements.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Jules Tools CLI</h3>
+            <div class="tool-url"><a href="https://jules.google/docs" target="_blank">jules.google/docs</a></div>
+            <p class="tool-description">Google's scriptable interface for Jules agent, enabling automation of development workflows.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category 3: Online/Browser Tools -->
+      <section class="category-section">
+        <div class="category-header">
+          <h2 class="category-title">3. Online/Browser Tools</h2>
+          <p class="category-description">
+            Zero-setup, browser-based rapid prototyping tools that work instantly without any installation required.
+          </p>
+        </div>
+        <div class="tools-grid">
+          <div class="tool-card">
+            <h3 class="tool-name">v0.dev</h3>
+            <div class="tool-url"><a href="https://v0.dev" target="_blank">v0.dev</a></div>
+            <p class="tool-description">Vercel's React and Tailwind CSS component generator, creating production-ready UI components from text descriptions.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Bolt.new</h3>
+            <div class="tool-url"><a href="https://bolt.new" target="_blank">bolt.new</a></div>
+            <p class="tool-description">StackBlitz's full-stack web application builder, allowing you to create complete apps in the browser.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Lovable.dev</h3>
+            <div class="tool-url"><a href="https://lovable.dev" target="_blank">lovable.dev</a></div>
+            <p class="tool-description">Natural language to full application converter, transforming ideas into functional apps instantly.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Replit</h3>
+            <div class="tool-url"><a href="https://replit.com" target="_blank">replit.com</a></div>
+            <p class="tool-description">Cloud IDE with AI assistance, real-time collaboration, and instant deployment capabilities.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category 4: Autonomous Agents -->
+      <section class="category-section">
+        <div class="category-header">
+          <h2 class="category-title">4. Autonomous Agents</h2>
+          <p class="category-description">
+            Tools that work independently in the background, creating plans, implementing features, and submitting pull requests autonomously.
+          </p>
+        </div>
+        <div class="tools-grid">
+          <div class="tool-card">
+            <h3 class="tool-name">Jules</h3>
+            <div class="tool-url"><a href="https://jules.google" target="_blank">jules.google</a></div>
+            <p class="tool-description">Google's autonomous agent that integrates with GitHub, creates comprehensive plans, and generates pull requests independently.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Claude Code Web</h3>
+            <div class="tool-url"><a href="https://claude.ai/code" target="_blank">claude.ai/code</a></div>
+            <p class="tool-description">Anthropic's cloud-based autonomous development platform with sandboxed execution environment.</p>
+            <div class="tool-highlight">$500M+ revenue - Enterprise solution</div>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Codex Cloud</h3>
+            <div class="tool-url"><a href="https://openai.com/codex" target="_blank">openai.com/codex</a></div>
+            <p class="tool-description">OpenAI's cloud-based autonomous development system for large-scale code generation and modification.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category 5: UX/Design Tools -->
+      <section class="category-section">
+        <div class="category-header">
+          <h2 class="category-title">5. UX/Design Tools</h2>
+          <p class="category-description">
+            AI-powered design and prototyping platforms for creating user interfaces, mockups, and interactive prototypes.
+          </p>
+        </div>
+        <div class="tools-grid">
+          <div class="tool-card">
+            <h3 class="tool-name">Figma AI</h3>
+            <div class="tool-url"><a href="https://figma.com" target="_blank">figma.com</a></div>
+            <p class="tool-description">Built-in AI capabilities for UI generation, content filling, and design automation within Figma's collaborative platform.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">UX Pilot</h3>
+            <div class="tool-url"><a href="https://uxpilot.ai" target="_blank">uxpilot.ai</a></div>
+            <p class="tool-description">AI-powered UX and design workflows, automating common design tasks and generating user flows.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Banani</h3>
+            <div class="tool-url"><a href="https://banani.ai" target="_blank">banani.ai</a></div>
+            <p class="tool-description">Design prototyping tool with Figma export capabilities, bridging AI generation and professional design tools.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Proto.io</h3>
+            <div class="tool-url"><a href="https://proto.io" target="_blank">proto.io</a></div>
+            <p class="tool-description">No-code visual prototyping platform for creating interactive app prototypes without programming.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">ProtoPie</h3>
+            <div class="tool-url"><a href="https://protopie.io" target="_blank">protopie.io</a></div>
+            <p class="tool-description">Interactive prototype platform supporting advanced interactions and animations for high-fidelity prototypes.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Midjourney</h3>
+            <div class="tool-url"><a href="https://midjourney.com" target="_blank">midjourney.com</a></div>
+            <p class="tool-description">Visual generation tool for creating concept art, UI mockups, and design inspiration imagery.</p>
+          </div>
+
+          <div class="tool-card">
+            <h3 class="tool-name">Perplexity</h3>
+            <div class="tool-url"><a href="https://perplexity.ai" target="_blank">perplexity.ai</a></div>
+            <p class="tool-description">AI-powered research tool for competitive analysis, user research, and design trend discovery.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Key Distinctions -->
+      <section class="key-distinctions">
+        <h3>Key Distinctions</h3>
+        <div class="distinctions-grid">
+          <div class="distinction-card">
+            <div class="distinction-title">Local vs Cloud</div>
+            <div class="distinction-content">
+              IDE and CLI tools run locally on your machine, while Online and Autonomous tools operate in the cloud with remote processing.
+            </div>
+          </div>
+
+          <div class="distinction-card">
+            <div class="distinction-title">Synchronous vs Asynchronous</div>
+            <div class="distinction-content">
+              Most tools provide real-time, synchronous feedback. Autonomous agents work asynchronously, completing tasks independently in the background.
+            </div>
+          </div>
+
+          <div class="distinction-card">
+            <div class="distinction-title">Control Level</div>
+            <div class="distinction-content">
+              IDE and CLI tools give developers full control. Online tools abstract away complexity. Autonomous agents work with minimal supervision.
+            </div>
+          </div>
+
+          <div class="distinction-card">
+            <div class="distinction-title">Setup Required</div>
+            <div class="distinction-content">
+              IDE and CLI tools require installation and configuration. Online tools work instantly in browsers. Agents need GitHub or repository integration.
+            </div>
+          </div>
+
+          <div class="distinction-card">
+            <div class="distinction-title">Target User</div>
+            <div class="distinction-content">
+              Developers prefer IDE and CLI tools. Rapid prototypers favor online tools. Teams benefit from autonomous agents. Designers use UX tools.
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- BMJ Footer (Required) -->
+  <footer class="bmj-footer">
+    <div class="bmj-container">
+      <div class="bmj-footer-grid">
+
+        <!-- Content & Resources -->
+        <div class="bmj-footer-column">
+          <h4 class="bmj-footer-heading">Content & Resources</h4>
+          <ul class="bmj-footer-links">
+            <li><a href="https://www.bmj.com/collections">Collections</a></li>
+            <li><a href="https://www.bmj.com/health-south-asia">Health in South Asia</a></li>
+            <li><a href="https://www.bmj.com/womens-health">Women's, Children's & Adolescents' health</a></li>
+            <li><a href="https://www.bmj.com/research">Research</a></li>
+            <li><a href="https://www.bmj.com/education">Education</a></li>
+            <li><a href="https://www.bmj.com/news-views">News and views</a></li>
+            <li><a href="https://www.bmj.com/opinion">BMJ Opinion</a></li>
+            <li><a href="https://www.bmj.com/rapid-responses">Rapid responses</a></li>
+            <li><a href="https://www.bmj.com/archive">Archive</a></li>
+          </ul>
+        </div>
+
+        <!-- About BMJ -->
+        <div class="bmj-footer-column">
+          <h4 class="bmj-footer-heading">About BMJ</h4>
+          <ul class="bmj-footer-links">
+            <li><a href="https://www.bmj.com/about-us">About us</a></li>
+            <li><a href="https://www.bmj.com/editorial-staff">Editorial staff</a></li>
+            <li><a href="https://www.bmj.com/bmj-usa">BMJ in the USA</a></li>
+            <li><a href="https://www.bmj.com/bmj-latin-america">BMJ in Latin America</a></li>
+            <li><a href="https://www.bmj.com/bmj-south-asia">BMJ in South Asia</a></li>
+            <li><a href="https://www.bmj.com/advisory-panels">Advisory panels</a></li>
+            <li><a href="https://www.bmj.com/policies">Policies</a></li>
+            <li><a href="https://www.bmj.com/submit">Submit your paper</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources -->
+        <div class="bmj-footer-column">
+          <h4 class="bmj-footer-heading">Resources</h4>
+          <ul class="bmj-footer-links">
+            <li><a href="https://www.bmj.com/authors">Authors</a></li>
+            <li><a href="https://www.bmj.com/reviewers">Reviewers</a></li>
+            <li><a href="https://www.bmj.com/bma-members">BMA members</a></li>
+            <li><a href="https://www.bmj.com/readers">Readers</a></li>
+            <li><a href="https://www.bmj.com/subscribers">Subscribers</a></li>
+            <li><a href="https://www.bmj.com/advertisers">Advertisers</a></li>
+            <li><a href="https://www.bmj.com/media">Media</a></li>
+            <li><a href="https://www.bmj.com/recruiters">Recruiters</a></li>
+          </ul>
+        </div>
+
+        <!-- BMJ Services -->
+        <div class="bmj-footer-column">
+          <h4 class="bmj-footer-heading">BMJ Services</h4>
+          <ul class="bmj-footer-links">
+            <li><a href="https://careers.bmj.com">Careers</a></li>
+            <li><a href="https://learning.bmj.com">Learning</a></li>
+            <li><a href="https://masterclasses.bmj.com">Masterclasses</a></li>
+            <li><a href="https://journals.bmj.com">Journals</a></li>
+            <li><a href="https://student.bmj.com">Student</a></li>
+            <li><a href="https://bestpractice.bmj.com">Best Practice</a></li>
+            <li><a href="https://www.bmj.com/awards">Awards</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="bmj-footer-bottom">
+        <div class="bmj-footer-bottom-links">
+          <a href="https://www.bmj.com/contact">Contact us</a>
+          <a href="https://www.bmj.com/complaints">Complaints</a>
+          <a href="https://www.bmj.com/cookies">Cookie settings</a>
+          <a href="https://www.bmj.com/privacy">Privacy policy</a>
+          <a href="https://www.bmj.com/terms">Terms & conditions</a>
+          <a href="https://www.bmj.com/sitemap">Sitemap</a>
+        </div>
+        <div class="bmj-footer-copyright">
+          <p>&copy; BMJ Publishing Group Ltd 2024. All rights reserved.</p>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Optional: JavaScript for interactivity -->
+  <script src="app.js"></script>
+</body>
+</html>

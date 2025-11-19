@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World - BMJ AI Rapid Prototype</title>
+
+  <!-- Required: Base styles -->
+  <link rel="stylesheet" href="bmj-pat-lib/assets/css/bmj-base.css">
+  <link rel="stylesheet" href="bmj-pat-lib/assets/css/bmj-typography.css">
+
+  <!-- Required: Header and Footer styles -->
+  <link rel="stylesheet" href="bmj-pat-lib/components/header/header.css">
+  <link rel="stylesheet" href="bmj-pat-lib/components/footer/footer.css">
+
+  <!-- Optional: Component styles -->
+  <link rel="stylesheet" href="bmj-pat-lib/components/buttons/buttons.css">
+  <link rel="stylesheet" href="bmj-pat-lib/components/cards/cards.css">
+
+  <style>
+    /* Custom styles for hello world page */
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-violet) 100%);
+      color: white;
+      padding: 4rem 1rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      opacity: 0.95;
+      margin-bottom: 2rem;
+    }
+
+    .welcome-card {
+      max-width: 800px;
+      margin: 0 auto 2rem;
+    }
+
+    .feature-grid {
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- BMJ Header (Required) -->
+  <header class="bmj-header">
+    <div class="bmj-header-top">
+      <div class="bmj-container">
+        <div class="bmj-header-logo">
+          <a href="https://www.bmj.com">
+            <svg class="bmj-logo" width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="120" height="40" fill="#005EB8"/>
+              <text x="10" y="28" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">BMJ</text>
+            </svg>
+          </a>
+        </div>
+        <div class="bmj-header-actions">
+          <a href="https://www.bmj.com/search/advanced" class="bmj-header-link">Advanced search</a>
+          <a href="https://www.bmj.com/coronavirus" class="bmj-header-link">COVID-19</a>
+          <a href="https://myaccount.bmj.com" class="bmj-header-link">My Account</a>
+          <a href="https://www.bmj.com/user/login" class="bmj-header-link">Login</a>
+          <a href="https://www.bmj.com/subscribe" class="btn btn-primary btn-sm">Subscribe</a>
+        </div>
+      </div>
+    </div>
+    <nav class="bmj-header-nav">
+      <div class="bmj-container">
+        <ul class="bmj-nav-primary">
+          <li><a href="https://www.bmj.com/research">Research</a></li>
+          <li><a href="https://www.bmj.com/education">Education</a></li>
+          <li><a href="https://www.bmj.com/news-views">News & Views</a></li>
+          <li><a href="https://www.bmj.com/campaigns">Campaigns</a></li>
+          <li><a href="https://www.bmj.com/jobs">Jobs</a></li>
+        </ul>
+        <ul class="bmj-nav-secondary">
+          <li><a href="https://www.bmj.com/archive">Archive</a></li>
+          <li><a href="https://www.bmj.com/authors">For authors</a></li>
+          <li><a href="https://www.bmj.com/company">Hosted</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="bmj-container">
+      <h1 class="hero-title">Hello World!</h1>
+      <p class="hero-subtitle">Welcome to BMJ AI Rapid Prototype</p>
+      <button class="btn btn-lg" style="background: white; color: var(--primary-color); font-weight: bold;">Get Started</button>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main>
+    <div class="bmj-container" style="padding: 0 1rem 3rem;">
+
+      <!-- Welcome Card -->
+      <div class="card card-shadow welcome-card">
+        <div class="card-body" style="padding: 2rem;">
+          <h2 class="card-title">Welcome to Your BMJ Prototype</h2>
+          <p class="card-text mt-3">
+            This is a fully functional hello world page built using the BMJ Pattern Library.
+            It includes the complete BMJ navigation header, footer, and design system components.
+          </p>
+          <p class="card-text mt-2">
+            This prototype is ready to deploy on Vercel with zero configuration.
+            Simply push to your Git repository and connect it to Vercel for instant deployment.
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature Cards -->
+      <div class="grid-md-3 feature-grid">
+        <div class="grid-item">
+          <div class="card card-hover card-research">
+            <div class="card-body">
+              <span class="badge badge-violet mb-2">Design System</span>
+              <h3 class="card-title">BMJ Components</h3>
+              <p class="card-text">
+                Built with the official BMJ pattern library including buttons, cards, forms, and typography.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-item">
+          <div class="card card-hover card-education">
+            <div class="card-body">
+              <span class="badge badge-success mb-2">Responsive</span>
+              <h3 class="card-title">Mobile-First</h3>
+              <p class="card-text">
+                Fully responsive design that works seamlessly across desktop, tablet, and mobile devices.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-item">
+          <div class="card card-hover card-news">
+            <div class="card-body">
+              <span class="badge badge-info mb-2">Deployment</span>
+              <h3 class="card-title">Vercel Ready</h3>
+              <p class="card-text">
+                Optimized for Vercel deployment with zero configuration. Deploy in seconds.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Details -->
+      <div class="card card-bordered mt-5">
+        <div class="card-header">
+          <h3>Technical Stack</h3>
+        </div>
+        <div class="card-body">
+          <ul style="list-style: none; padding: 0;">
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--gray-200);">
+              <strong>HTML5:</strong> Semantic markup with accessibility in mind
+            </li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--gray-200);">
+              <strong>CSS3:</strong> Custom properties, flexbox, and grid layout
+            </li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--gray-200);">
+              <strong>Vanilla JavaScript:</strong> No frameworks, pure JavaScript for interactivity
+            </li>
+            <li style="padding: 0.5rem 0;">
+              <strong>BMJ Pattern Library:</strong> Official design system components
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- BMJ Footer (Required) -->
+  <footer class="bmj-footer">
+    <div class="bmj-container">
+      <div class="bmj-footer-grid">
+
+        <!-- Content & Resources -->
+        <div class="bmj-footer-column">
+          <h4 class="bmj-footer-heading">Content & Resources</h4>
+          <ul class="bmj-footer-links">
+            <li><a href="https://www.bmj.com/collections">Collections</a></li>
+            <li><a href="https://www.bmj.com/health-south-asia">Health in South Asia</a></li>
+            <li><a href="https://www.bmj.com/womens-health">Women's, Children's & Adolescents' health</a></li>
+            <li><a href="https://www.bmj.com/research">Research</a></li>
+            <li><a href="https://www.bmj.com/education">Education</a></li>
+            <li><a href="https://www.bmj.com/news-views">News and views</a></li>
+            <li><a href="https://www.bmj.com/opinion">BMJ Opinion</a></li>
+            <li><a href="https://www.bmj.com/rapid-responses">Rapid responses</a></li>
+            <li><a href="https://www.bmj.com/archive">Archive</a></li>
+          </ul>
+        </div>
+
+        <!-- About BMJ -->
+        <div class="bmj-footer-column">
+          <h4 class="bmj-footer-heading">About BMJ</h4>
+          <ul class="bmj-footer-links">
+            <li><a href="https://www.bmj.com/about-us">About us</a></li>
+            <li><a href="https://www.bmj.com/editorial-staff">Editorial staff</a></li>
+            <li><a href="https://www.bmj.com/bmj-usa">BMJ in the USA</a></li>
+            <li><a href="https://www.bmj.com/bmj-latin-america">BMJ in Latin America</a></li>
+            <li><a href="https://www.bmj.com/bmj-south-asia">BMJ in South Asia</a></li>
+            <li><a href="https://www.bmj.com/advisory-panels">Advisory panels</a></li>
+            <li><a href="https://www.bmj.com/policies">Policies</a></li>
+            <li><a href="https://www.bmj.com/submit">Submit your paper</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources -->
+        <div class="bmj-footer-column">
+          <h4 class="bmj-footer-heading">Resources</h4>
+          <ul class="bmj-footer-links">
+            <li><a href="https://www.bmj.com/authors">Authors</a></li>
+            <li><a href="https://www.bmj.com/reviewers">Reviewers</a></li>
+            <li><a href="https://www.bmj.com/bma-members">BMA members</a></li>
+            <li><a href="https://www.bmj.com/readers">Readers</a></li>
+            <li><a href="https://www.bmj.com/subscribers">Subscribers</a></li>
+            <li><a href="https://www.bmj.com/advertisers">Advertisers</a></li>
+            <li><a href="https://www.bmj.com/media">Media</a></li>
+            <li><a href="https://www.bmj.com/recruiters">Recruiters</a></li>
+          </ul>
+        </div>
+
+        <!-- BMJ Services -->
+        <div class="bmj-footer-column">
+          <h4 class="bmj-footer-heading">BMJ Services</h4>
+          <ul class="bmj-footer-links">
+            <li><a href="https://careers.bmj.com">Careers</a></li>
+            <li><a href="https://learning.bmj.com">Learning</a></li>
+            <li><a href="https://masterclasses.bmj.com">Masterclasses</a></li>
+            <li><a href="https://journals.bmj.com">Journals</a></li>
+            <li><a href="https://student.bmj.com">Student</a></li>
+            <li><a href="https://bestpractice.bmj.com">Best Practice</a></li>
+            <li><a href="https://www.bmj.com/awards">Awards</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="bmj-footer-bottom">
+        <div class="bmj-footer-bottom-links">
+          <a href="https://www.bmj.com/contact">Contact us</a>
+          <a href="https://www.bmj.com/complaints">Complaints</a>
+          <a href="https://www.bmj.com/cookies">Cookie settings</a>
+          <a href="https://www.bmj.com/privacy">Privacy policy</a>
+          <a href="https://www.bmj.com/terms">Terms & conditions</a>
+          <a href="https://www.bmj.com/sitemap">Sitemap</a>
+        </div>
+        <div class="bmj-footer-copyright">
+          <p>&copy; BMJ Publishing Group Ltd 2024. All rights reserved.</p>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Optional: JavaScript for interactivity -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+/* BMJ Pattern Library - Buttons
+ * Button styles and variants
+ */
+
+/* ===== BASE BUTTON ===== */
+.btn {
+  display: inline-block;
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.625rem 1.25rem;
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  border-radius: var(--border-radius);
+  transition: var(--transition-base);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: var(--box-shadow-sm);
+}
+
+.btn:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ===== BUTTON VARIANTS ===== */
+
+/* Primary Button */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background-color: #004A92;
+  border-color: #004A92;
+  color: var(--white);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background-color: var(--gray-600);
+  border-color: var(--gray-600);
+  color: var(--white);
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray-700);
+  border-color: var(--gray-700);
+  color: var(--white);
+}
+
+/* Success/Green Button */
+.btn-success {
+  background-color: var(--secondary-green);
+  border-color: var(--secondary-green);
+  color: var(--white);
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #218838;
+  color: var(--white);
+}
+
+/* Danger/Red Button */
+.btn-danger {
+  background-color: var(--secondary-red);
+  border-color: var(--secondary-red);
+  color: var(--white);
+}
+
+.btn-danger:hover {
+  background-color: #C82333;
+  border-color: #C82333;
+  color: var(--white);
+}
+
+/* Info/Teal Button */
+.btn-info {
+  background-color: var(--accent-teal);
+  border-color: var(--accent-teal);
+  color: var(--white);
+}
+
+.btn-info:hover {
+  background-color: #138496;
+  border-color: #138496;
+  color: var(--white);
+}
+
+/* Violet Button */
+.btn-violet {
+  background-color: var(--secondary-violet);
+  border-color: var(--secondary-violet);
+  color: var(--white);
+}
+
+.btn-violet:hover {
+  background-color: #5A32A3;
+  border-color: #5A32A3;
+  color: var(--white);
+}
+
+/* ===== OUTLINE BUTTONS ===== */
+
+/* Outline Primary */
+.btn-outline-primary {
+  background-color: transparent;
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* Outline Secondary */
+.btn-outline-secondary {
+  background-color: transparent;
+  border-color: var(--gray-600);
+  color: var(--gray-600);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--gray-600);
+  border-color: var(--gray-600);
+  color: var(--white);
+}
+
+/* Outline Success */
+.btn-outline-success {
+  background-color: transparent;
+  border-color: var(--secondary-green);
+  color: var(--secondary-green);
+}
+
+.btn-outline-success:hover {
+  background-color: var(--secondary-green);
+  border-color: var(--secondary-green);
+  color: var(--white);
+}
+
+/* Outline Danger */
+.btn-outline-danger {
+  background-color: transparent;
+  border-color: var(--secondary-red);
+  color: var(--secondary-red);
+}
+
+.btn-outline-danger:hover {
+  background-color: var(--secondary-red);
+  border-color: var(--secondary-red);
+  color: var(--white);
+}
+
+/* ===== LINK BUTTON ===== */
+.btn-link {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--primary-color);
+  text-decoration: underline;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.btn-link:hover {
+  background-color: transparent;
+  border-color: transparent;
+  color: #004A92;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ===== BUTTON SIZES ===== */
+
+/* Small Button */
+.btn-sm {
+  padding: 0.375rem 0.875rem;
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
+/* Large Button */
+.btn-lg {
+  padding: 0.875rem 1.75rem;
+  font-size: var(--font-size-lg);
+  line-height: 1.5;
+}
+
+/* ===== BUTTON MODIFIERS ===== */
+
+/* Block Button - Full Width */
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+/* Rounded Button */
+.btn-rounded {
+  border-radius: 2rem;
+}
+
+/* Square Button */
+.btn-square {
+  border-radius: 0;
+}
+
+/* ===== BUTTON GROUPS ===== */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.button-group .btn {
+  margin: 0;
+}
+
+/* Stacked button group */
+.button-group-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.button-group-vertical .btn {
+  width: 100%;
+}
+
+/* Justified button group */
+.button-group-justified {
+  display: flex;
+  width: 100%;
+}
+
+.button-group-justified .btn {
+  flex: 1;
+}
+
+/* ===== ICON BUTTONS ===== */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.btn-icon svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+/* Icon only button */
+.btn-icon-only {
+  padding: 0.625rem;
+  aspect-ratio: 1;
+}
+
+.btn-icon-only svg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+/* ===== LOADING STATE ===== */
+.btn-loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  top: 50%;
+  left: 50%;
+  margin-left: -0.5em;
+  margin-top: -0.5em;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: btn-spin 0.6s linear infinite;
+  color: inherit;
+  opacity: 1;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== RESPONSIVE BUTTONS ===== */
+@media (max-width: 45.9em) { /* < 736px */
+  .btn-block-mobile {
+    display: block;
+    width: 100%;
+  }
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .button-group .btn {
+    width: 100%;
+  }
+}

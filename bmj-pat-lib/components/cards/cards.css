@@ -1,0 +1,405 @@
+/* BMJ Pattern Library - Cards
+ * Card components for content display
+ */
+
+/* ===== BASE CARD ===== */
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: var(--transition-base);
+}
+
+/* ===== CARD VARIANTS ===== */
+
+/* Bordered Card */
+.card-bordered {
+  border: 1px solid var(--border-color);
+}
+
+/* Shadow Card */
+.card-shadow {
+  box-shadow: var(--box-shadow-md);
+}
+
+/* Hover Card - Interactive cards */
+.card-hover {
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+}
+
+.card-hover:hover {
+  box-shadow: var(--box-shadow-lg);
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
+}
+
+/* ===== CARD SECTIONS ===== */
+
+/* Card Image */
+.card-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.card-img-top {
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+/* Standard article card image size */
+.card-img-article {
+  aspect-ratio: 540 / 350;
+  object-fit: cover;
+}
+
+/* Card Header */
+.card-header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--bg-light);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-header h1,
+.card-header h2,
+.card-header h3,
+.card-header h4,
+.card-header h5,
+.card-header h6 {
+  margin-bottom: 0;
+}
+
+/* Card Body */
+.card-body {
+  padding: var(--spacing-lg);
+  flex: 1;
+}
+
+/* Card Footer */
+.card-footer {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--bg-light);
+  border-top: 1px solid var(--border-color);
+}
+
+/* ===== CARD CONTENT ELEMENTS ===== */
+
+/* Card Title */
+.card-title {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.3;
+}
+
+.card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card-title a:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+/* Card Subtitle */
+.card-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.4;
+}
+
+/* Card Text */
+.card-text {
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+}
+
+.card-text:last-child {
+  margin-bottom: 0;
+}
+
+/* Card Links */
+.card-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  margin-right: var(--spacing-md);
+}
+
+.card-link:hover {
+  text-decoration: underline;
+}
+
+.card-link:last-child {
+  margin-right: 0;
+}
+
+/* ===== ARTICLE CARDS ===== */
+
+/* Article Card - Specific styling for article listings */
+.card-article {
+  border: 1px solid var(--border-color);
+  transition: var(--transition-base);
+}
+
+.card-article:hover {
+  box-shadow: var(--box-shadow-md);
+  border-color: var(--gray-400);
+}
+
+.card-article .card-title {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Article Authors */
+.card-authors {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.author {
+  display: inline;
+}
+
+.author:not(:last-child):after {
+  content: ", ";
+}
+
+/* Article Metadata */
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* DOI display in cards */
+.card-doi {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  font-family: 'Courier New', Courier, monospace;
+  word-break: break-all;
+}
+
+/* ===== FEATURE CARDS ===== */
+
+/* Feature Card - For highlighting sections/categories */
+.card-feature {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #004A92 100%);
+  color: var(--white);
+  border: none;
+}
+
+.card-feature .card-title,
+.card-feature .card-text {
+  color: var(--white);
+}
+
+.card-feature .card-link {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+/* Category Cards with Color Variants */
+.card-research {
+  border-left: 4px solid var(--secondary-violet);
+}
+
+.card-education {
+  border-left: 4px solid var(--secondary-green);
+}
+
+.card-comment {
+  border-left: 4px solid var(--secondary-red);
+}
+
+.card-news {
+  border-left: 4px solid var(--accent-teal);
+}
+
+/* ===== HORIZONTAL CARDS ===== */
+
+/* Horizontal layout for cards */
+.card-horizontal {
+  flex-direction: row;
+}
+
+.card-horizontal .card-img {
+  width: 200px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.card-horizontal .card-body {
+  flex: 1;
+}
+
+@media (max-width: 45.9em) { /* < 736px */
+  .card-horizontal {
+    flex-direction: column;
+  }
+
+  .card-horizontal .card-img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+  }
+}
+
+/* ===== CARD GROUPS ===== */
+
+/* Card Grid - Use with grid system */
+.card-grid {
+  display: grid;
+  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Card Deck - Equal height cards */
+.card-deck {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+}
+
+.card-deck .card {
+  flex: 1 1 300px;
+}
+
+/* ===== COMPACT CARDS ===== */
+
+/* Compact Card - Reduced padding */
+.card-compact .card-body {
+  padding: var(--spacing-md);
+}
+
+.card-compact .card-title {
+  font-size: 1.125rem;
+}
+
+/* ===== SPECIAL CARD TYPES ===== */
+
+/* Response Card - For rapid responses */
+.card-response {
+  border: 1px solid var(--border-color);
+  background-color: var(--white);
+}
+
+.card-response .card-body {
+  padding: var(--spacing-lg);
+}
+
+.card-response-title {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--primary-color);
+}
+
+.card-response-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card-response-title a:hover {
+  text-decoration: underline;
+}
+
+.card-response-meta {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.card-response-excerpt {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.card-response-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+.card-response-actions a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.card-response-actions a:hover {
+  text-decoration: underline;
+}
+
+/* ===== CARD OVERLAYS ===== */
+
+/* Card with overlay content on image */
+.card-img-overlay {
+  position: relative;
+}
+
+.card-img-overlay .card-img {
+  display: block;
+}
+
+.card-img-overlay .card-body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: var(--white);
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.card-img-overlay .card-title {
+  color: var(--white);
+}
+
+.card-img-overlay .card-text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 45.9em) { /* < 736px */
+  .card-body {
+    padding: var(--spacing-md);
+  }
+
+  .card-header,
+  .card-footer {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+  }
+
+  .card-article .card-title {
+    font-size: 1.25rem;
+  }
+}

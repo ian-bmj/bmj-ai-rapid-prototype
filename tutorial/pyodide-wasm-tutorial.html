@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pyodide &amp; WebAssembly Tutorial</title>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-dim: #1f6feb;
+      --green: #3fb950;
+      --yellow: #d29922;
+      --red: #f85149;
+      --purple: #bc8cff;
+      --code-bg: #0d1117;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--yellow);
+      animation: pulse 1.5s infinite;
+    }
+
+    .status-dot.ready { background: var(--green); animation: none; }
+    .status-dot.error { background: var(--red); animation: none; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      color: white;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .section h3 {
+      font-size: 1rem;
+      color: var(--purple);
+      margin: 1rem 0 0.5rem;
+    }
+
+    .section p, .section li {
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .section ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .concept-box {
+      background: var(--code-bg);
+      border-left: 3px solid var(--purple);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9rem;
+    }
+
+    .concept-box strong {
+      color: var(--purple);
+    }
+
+    .concept-box p {
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      margin: 0.75rem 0;
+      position: relative;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    p code, li code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    .kw { color: #ff7b72; }
+    .fn { color: #d2a8ff; }
+    .str { color: #a5d6ff; }
+    .cmt { color: #8b949e; }
+    .num { color: #79c0ff; }
+    .op { color: #e6edf3; }
+
+    .run-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: var(--accent-dim);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .run-btn:hover { background: var(--accent); }
+    .run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .output {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--green);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      min-height: 2.5rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .output.error { color: var(--red); }
+
+    .editor {
+      width: 100%;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+      resize: vertical;
+      min-height: 120px;
+      outline: none;
+      tab-size: 4;
+    }
+
+    .editor:focus {
+      border-color: var(--accent);
+    }
+
+    .diagram {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.4;
+      color: var(--text-muted);
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 2px;
+      margin-bottom: -1px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tab {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: var(--code-bg);
+      border-color: var(--border);
+      color: var(--accent);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.75rem 0;
+    }
+
+    .flow-arrow {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-weight: bold;
+      min-width: 24px;
+      text-align: center;
+      padding-top: 0.1rem;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Pyodide &amp; WebAssembly Tutorial</h1>
+  <p>Run Python in your browser. No server required.</p>
+</header>
+
+<div class="container">
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Loading Pyodide...</span>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 1: What is WebAssembly? -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">1</span> What is WebAssembly (WASM)?</h2>
+
+    <p>
+      WebAssembly is a binary instruction format that runs in the browser at near-native speed.
+      Think of it as a <strong>portable compilation target</strong> &mdash; languages like C, C++, Rust,
+      and even Python can be compiled to WASM and run anywhere a browser (or WASM runtime) exists.
+    </p>
+
+    <div class="concept-box">
+      <strong>Key insight:</strong>
+      <p>
+        WASM isn't a replacement for JavaScript. It's a complement. Heavy computation (data processing,
+        image manipulation, cryptography, running an entire Python interpreter) can run in WASM while
+        JavaScript handles the DOM and UI.
+      </p>
+    </div>
+
+    <h3>How WASM works</h3>
+    <div class="diagram">  Source Code          Compiler             Browser
+  ┌──────────┐       ┌──────────┐        ┌──────────────────┐
+  │ C / Rust  │──────>│ Emscript │──────> │ .wasm binary     │
+  │ Python    │  or   │ wasm-pack│        │                  │
+  │ Go / etc. │       │ LLVM     │        │ Loaded &amp; executed │
+  └──────────┘       └──────────┘        │ by the browser's │
+                                          │ WASM VM          │
+                                          └──────────────────┘</div>
+
+    <h3>Live demo: Loading a .wasm file</h3>
+    <p>
+      This page includes a tiny <code>add.wasm</code> file (41 bytes!) that exports a single
+      <code>add(a, b)</code> function. It was hand-crafted from WebAssembly binary format &mdash;
+      no compiler needed for something this simple.
+    </p>
+
+    <pre><code><span class="cmt">// Loading a .wasm file from a relative path</span>
+<span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'./add.wasm'</span>);
+<span class="kw">const</span> bytes = <span class="kw">await</span> response.<span class="fn">arrayBuffer</span>();
+<span class="kw">const</span> { instance } = <span class="kw">await</span> WebAssembly.<span class="fn">instantiate</span>(bytes);
+instance.exports.<span class="fn">add</span>(<span class="num">40</span>, <span class="num">2</span>);  <span class="cmt">// 42</span></code></pre>
+
+    <button class="run-btn" onclick="runWasmDemo()">Run WASM Demo</button>
+    <div class="output" id="wasm-output">Click "Run WASM Demo" to load add.wasm</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 2: What is Pyodide? -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">2</span> What is Pyodide?</h2>
+
+    <p>
+      <a href="https://pyodide.org" target="_blank">Pyodide</a> is CPython compiled to WebAssembly
+      using <a href="https://emscripten.org" target="_blank">Emscripten</a>.
+      It gives you a <strong>full Python 3.12+ interpreter</strong> running entirely in the browser &mdash;
+      with access to the standard library, NumPy, Pandas, and 100+ other packages.
+    </p>
+
+    <div class="concept-box">
+      <strong>Python for you:</strong>
+      <p>
+        Since you already know Python, Pyodide lets you use your existing skills to build
+        interactive web tools, data visualizations, and educational demos &mdash;
+        all without writing JavaScript or running a server.
+      </p>
+    </div>
+
+    <h3>How Pyodide loads</h3>
+    <div class="flow-step">
+      <span class="flow-arrow">1.</span>
+      <span>Browser downloads <code>pyodide.js</code> (~200 KB bootstrap script)</span>
+    </div>
+    <div class="flow-step">
+      <span class="flow-arrow">2.</span>
+      <span>Bootstrap fetches <code>pyodide.asm.wasm</code> (~7 MB compressed) &mdash; the CPython interpreter compiled to WASM</span>
+    </div>
+    <div class="flow-step">
+      <span class="flow-arrow">3.</span>
+      <span>It loads <code>python_stdlib.zip</code> for the standard library and <code>pyodide-lock.json</code> for package metadata</span>
+    </div>
+    <div class="flow-step">
+      <span class="flow-arrow">4.</span>
+      <span>You get a <code>pyodide</code> object with <code>.runPython()</code>, <code>.runPythonAsync()</code>, and more</span>
+    </div>
+
+    <h3>Your first Pyodide code</h3>
+    <pre><code><span class="kw">import</span> sys
+<span class="fn">print</span>(<span class="str">f"Python </span>{sys.version}<span class="str">"</span>)
+<span class="fn">print</span>(<span class="str">f"Platform: </span>{sys.platform}<span class="str">"</span>)
+<span class="fn">print</span>(<span class="str">f"Running in WASM: </span>{<span class="str">'emscripten'</span> <span class="kw">in</span> sys.platform}<span class="str">"</span>)</code></pre>
+
+    <button class="run-btn" onclick="runExample('ex2')" id="btn-ex2">Run</button>
+    <div class="output" id="output-ex2">Waiting for Pyodide to load...</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 3: Running Python code -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">3</span> Running Python in the Browser</h2>
+
+    <p>
+      Pyodide gives you two main ways to execute Python:
+    </p>
+    <ul>
+      <li><code>pyodide.runPython(code)</code> &mdash; synchronous, returns the last expression's value</li>
+      <li><code>pyodide.runPythonAsync(code)</code> &mdash; async, supports <code>await</code> and top-level imports</li>
+    </ul>
+
+    <h3>Interactive Python editor</h3>
+    <p>Edit the code below and hit Run. This is real Python, running in your browser via WASM.</p>
+
+    <textarea class="editor" id="editor-ex3">
+# Try any Python code here!
+# The standard library is fully available.
+
+from collections import Counter
+import json
+
+text = """
+WebAssembly enables high-performance applications on web pages.
+Pyodide brings the entire Python scientific computing stack to the browser.
+This combination enables powerful browser-based data analysis tools.
+"""
+
+words = text.lower().split()
+counter = Counter(words)
+
+print("=== Word Frequency Analysis ===")
+for word, count in counter.most_common(10):
+    bar = "#" * (count * 4)
+    print(f"  {word:>15s} | {bar} ({count})")
+
+print(f"\nTotal words: {len(words)}")
+print(f"Unique words: {len(counter)}")
+</textarea>
+    <button class="run-btn" onclick="runEditor('ex3')" id="btn-ex3">Run</button>
+    <div class="output" id="output-ex3">Waiting for Pyodide to load...</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 4: Loading packages -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">4</span> Loading Python Packages</h2>
+
+    <p>
+      Pyodide includes <code>micropip</code>, a package installer that works in the browser.
+      It can install packages from:
+    </p>
+    <ul>
+      <li><strong>PyPI</strong> &mdash; any pure-Python wheel, or packages pre-built for Pyodide (NumPy, Pandas, etc.)</li>
+      <li><strong>Relative URLs</strong> &mdash; <code>.whl</code> files served alongside your HTML</li>
+      <li><strong>Absolute URLs</strong> &mdash; wheels hosted anywhere on the web</li>
+    </ul>
+
+    <div class="concept-box">
+      <strong>What's a wheel?</strong>
+      <p>
+        A <code>.whl</code> file is Python's standard distribution format &mdash; it's just a ZIP file
+        with a specific naming convention (<code>name-version-pytag-abitag-platform.whl</code>).
+        For Pyodide, pure-Python wheels (<code>py3-none-any.whl</code>) work out of the box.
+        Compiled extensions need to be built specifically for the <code>emscripten</code> platform.
+      </p>
+    </div>
+
+    <h3>Installing from PyPI</h3>
+    <pre><code><span class="kw">import</span> micropip
+<span class="kw">await</span> micropip.install(<span class="str">"regex"</span>)  <span class="cmt"># installs from PyPI</span>
+
+<span class="kw">import</span> regex
+m = regex.search(<span class="str">r"\b\w+(?:ing)\b"</span>, <span class="str">"Pyodide is amazing for learning"</span>)
+<span class="fn">print</span>(<span class="str">f"Found: </span>{m.group()}<span class="str">"</span>)</code></pre>
+
+    <h3>Loading a local wheel from a relative path</h3>
+    <p>
+      This tutorial directory includes <code>tutorial_utils-0.1.0-py3-none-any.whl</code> &mdash;
+      a small package we built to demonstrate local wheel loading. Because this HTML file
+      and the <code>.whl</code> are served from the <strong>same directory</strong> on GitHub Pages,
+      we can install it with a relative URL:
+    </p>
+
+    <pre><code><span class="kw">import</span> micropip
+<span class="kw">await</span> micropip.install(<span class="str">"./tutorial_utils-0.1.0-py3-none-any.whl"</span>)
+
+<span class="kw">import</span> tutorial_utils <span class="kw">as</span> tu
+<span class="fn">print</span>(tu.demo())</code></pre>
+
+    <button class="run-btn" onclick="runExample('ex4')" id="btn-ex4">Run (installs local wheel)</button>
+    <div class="output" id="output-ex4">Waiting for Pyodide to load...</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 5: Python <-> JavaScript bridge -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">5</span> Python &harr; JavaScript Bridge</h2>
+
+    <p>
+      Pyodide provides seamless interop between Python and JavaScript.
+      You can access JavaScript objects from Python and vice versa.
+    </p>
+
+    <h3>Python accessing JavaScript &amp; the DOM</h3>
+    <textarea class="editor" id="editor-ex5">
+from js import document, window
+
+# Read info from the JavaScript environment
+print(f"Page title: {document.title}")
+print(f"URL: {window.location.href}")
+print(f"User agent: {window.navigator.userAgent[:80]}...")
+print(f"Screen: {window.screen.width}x{window.screen.height}")
+print(f"Window inner: {window.innerWidth}x{window.innerHeight}")
+
+# Modify the DOM from Python!
+status = document.getElementById("statusText")
+original = status.textContent
+status.textContent = "Python just modified this status bar!"
+
+import asyncio
+await asyncio.sleep(2)
+status.textContent = original
+print("\n(Status bar was modified and restored by Python)")
+</textarea>
+    <button class="run-btn" onclick="runEditor('ex5')" id="btn-ex5">Run</button>
+    <div class="output" id="output-ex5">Waiting for Pyodide to load...</div>
+
+    <h3>JavaScript calling Python functions</h3>
+    <pre><code><span class="cmt">// JavaScript side:</span>
+<span class="kw">const</span> pyFn = pyodide.<span class="fn">runPython</span>(`
+<span class="kw">def</span> <span class="fn">process</span>(data):
+    <span class="kw">return</span> [x ** <span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> data <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span>]
+process
+`);
+
+pyFn([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>]).<span class="fn">toJs</span>();
+<span class="cmt">// Returns: [4, 16, 36]</span></code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 6: Data science in the browser -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">6</span> Data Science in the Browser</h2>
+
+    <p>
+      Pyodide ships with pre-built versions of NumPy, Pandas, scikit-learn, matplotlib, and more.
+      These are full compiled extensions (C/Fortran) cross-compiled to WASM via Emscripten.
+    </p>
+
+    <textarea class="editor" id="editor-ex6">
+import micropip
+await micropip.install("numpy")
+import numpy as np
+
+# Generate some data
+np.random.seed(42)
+data = np.random.normal(loc=100, scale=15, size=1000)
+
+print("=== Statistical Summary ===")
+print(f"  Mean:     {np.mean(data):.2f}")
+print(f"  Median:   {np.median(data):.2f}")
+print(f"  Std Dev:  {np.std(data):.2f}")
+print(f"  Min:      {np.min(data):.2f}")
+print(f"  Max:      {np.max(data):.2f}")
+print(f"  25th pct: {np.percentile(data, 25):.2f}")
+print(f"  75th pct: {np.percentile(data, 75):.2f}")
+
+# ASCII histogram
+hist, edges = np.histogram(data, bins=20)
+max_h = max(hist)
+print("\n=== Distribution ===")
+for i, count in enumerate(hist):
+    bar = "#" * int(count / max_h * 40)
+    lo, hi = edges[i], edges[i+1]
+    print(f"  {lo:6.1f}-{hi:6.1f} | {bar} ({count})")
+</textarea>
+    <button class="run-btn" onclick="runEditor('ex6')" id="btn-ex6">Run (loads NumPy ~5s)</button>
+    <div class="output" id="output-ex6">Waiting for Pyodide to load...</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 7: WASM wheels (inspired by Simon Willison) -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">7</span> WASM Wheels: Compiled Extensions in the Browser</h2>
+
+    <p>
+      This is the frontier that
+      <a href="https://simonwillison.net/2026/Feb/6/pydantic-monty/" target="_blank">Simon Willison's recent blog post</a>
+      explores. Beyond pure-Python wheels, you can compile <strong>Rust or C code into WASM wheels</strong>
+      that load inside Pyodide. This is how projects like
+      <a href="https://github.com/pydantic/monty" target="_blank">Pydantic's Monty</a>
+      (a sandboxed Python subset written in Rust) run in the browser.
+    </p>
+
+    <div class="concept-box">
+      <strong>Two flavors of WASM in the browser:</strong>
+      <p>
+        <strong>1. Standalone WASM</strong> &mdash; Load a <code>.wasm</code> file directly in JavaScript
+        (like our <code>add.wasm</code> example in Section 1). Fast, minimal, but you write JavaScript glue code.<br>
+        <strong>2. WASM wheel in Pyodide</strong> &mdash; Compile your Rust/C extension into a
+        <code>.whl</code> targeting the <code>emscripten</code> platform. Install it with micropip and use it
+        from Python. The entire stack (Python + your extension) runs in WASM.
+      </p>
+    </div>
+
+    <h3>How a WASM wheel works</h3>
+    <div class="diagram">  ┌────────────────────────────────────────────────────┐
+  │                  Browser                           │
+  │                                                    │
+  │  ┌──────────────────────────────────────────────┐  │
+  │  │              Pyodide (CPython WASM)           │  │
+  │  │                                               │  │
+  │  │  ┌─────────────────────────────────────────┐  │  │
+  │  │  │  Your Python code                       │  │  │
+  │  │  │  >>> import pydantic_monty              │  │  │
+  │  │  │  >>> monty.run("print(1 + 2)")          │  │  │
+  │  │  └───────────────┬─────────────────────────┘  │  │
+  │  │                  │ calls                       │  │
+  │  │  ┌───────────────▼─────────────────────────┐  │  │
+  │  │  │  WASM wheel (.so compiled from Rust)    │  │  │
+  │  │  │  pydantic_monty-0.0.3-...-wasm32.whl   │  │  │
+  │  │  └─────────────────────────────────────────┘  │  │
+  │  └──────────────────────────────────────────────┘  │
+  │                                                    │
+  │  All running in WebAssembly. No server needed.     │
+  └────────────────────────────────────────────────────┘</div>
+
+    <h3>Building your own WASM wheel</h3>
+    <p>If you want to compile a Rust extension for Pyodide:</p>
+    <pre><code><span class="cmt"># 1. Set up the Emscripten toolchain</span>
+$ git clone https://github.com/emscripten-core/emsdk.git
+$ cd emsdk &amp;&amp; ./emsdk install latest &amp;&amp; ./emsdk activate latest
+
+<span class="cmt"># 2. Build with pyodide-build (for Rust packages using PyO3/maturin)</span>
+$ pip install pyodide-build
+$ pyodide build  <span class="cmt"># in your Python package directory</span>
+
+<span class="cmt"># 3. The output is a .whl file you can serve alongside your HTML</span>
+<span class="cmt"># 4. Install in Pyodide via micropip:</span>
+<span class="cmt">#    await micropip.install("./my_package-0.1.0-cp312-cp312-emscripten_3_1_58_wasm32.whl")</span></code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 8: Self-hosting guide -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">8</span> Deployment &amp; Self-Hosting</h2>
+
+    <p>
+      This tutorial uses the Pyodide CDN (<code>cdn.jsdelivr.net</code>) for convenience.
+      For production or offline use, you can self-host Pyodide entirely.
+    </p>
+
+    <h3>Option A: CDN (what this tutorial uses)</h3>
+    <pre><code><span class="cmt">&lt;!-- Just add the script tag. indexURL is auto-detected. --&gt;</span>
+&lt;script src=<span class="str">"https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"</span>&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  <span class="kw">const</span> pyodide = <span class="kw">await</span> <span class="fn">loadPyodide</span>();
+&lt;/script&gt;</code></pre>
+
+    <h3>Option B: Self-hosted (all files local)</h3>
+    <pre><code><span class="cmt"># Download the Pyodide release (~200MB full, or ~15MB core)</span>
+$ wget https://github.com/pyodide/pyodide/releases/download/0.27.5/pyodide-0.27.5.tar.bz2
+$ tar xjf pyodide-0.27.5.tar.bz2 -C ./tutorial/pyodide/
+
+<span class="cmt"># Your directory structure:</span>
+<span class="cmt"># tutorial/</span>
+<span class="cmt">#   pyodide-wasm-tutorial.html</span>
+<span class="cmt">#   pyodide/</span>
+<span class="cmt">#     pyodide.js           (~200 KB)</span>
+<span class="cmt">#     pyodide.asm.wasm     (~7 MB)</span>
+<span class="cmt">#     pyodide.asm.js       (~400 KB)</span>
+<span class="cmt">#     python_stdlib.zip    (~5 MB)</span>
+<span class="cmt">#     pyodide-lock.json</span>
+<span class="cmt">#     *.whl                (pre-built packages)</span></code></pre>
+
+    <pre><code><span class="cmt">&lt;!-- Load from relative path. indexURL auto-detects from script src. --&gt;</span>
+&lt;script src=<span class="str">"./pyodide/pyodide.js"</span>&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  <span class="cmt">// No indexURL needed - it's inferred from the script tag location</span>
+  <span class="kw">const</span> pyodide = <span class="kw">await</span> <span class="fn">loadPyodide</span>();
+&lt;/script&gt;</code></pre>
+
+    <h3>GitHub Pages deployment</h3>
+    <p>
+      GitHub Pages serves static files with correct WASM MIME types and CORS headers &mdash;
+      making it an ideal free host. Just push your <code>tutorial/</code> directory and enable
+      GitHub Pages from Settings &rarr; Pages &rarr; Deploy from branch.
+    </p>
+    <pre><code><span class="cmt"># Your GitHub Pages URL will be:</span>
+<span class="cmt"># https://&lt;username&gt;.github.io/&lt;repo&gt;/tutorial/pyodide-wasm-tutorial.html</span>
+<span class="cmt">#</span>
+<span class="cmt"># The .whl and .wasm files are at:</span>
+<span class="cmt"># https://&lt;username&gt;.github.io/&lt;repo&gt;/tutorial/tutorial_utils-0.1.0-py3-none-any.whl</span>
+<span class="cmt"># https://&lt;username&gt;.github.io/&lt;repo&gt;/tutorial/add.wasm</span>
+<span class="cmt">#</span>
+<span class="cmt"># Because they're in the same directory, relative paths like</span>
+<span class="cmt"># "./add.wasm" and "./tutorial_utils-0.1.0-py3-none-any.whl" just work.</span></code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 9: Sandbox / Playground -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">9</span> Playground</h2>
+
+    <p>
+      Try anything you want. The full Python standard library is available, plus any
+      packages you install with <code>micropip</code>. Use <code>await</code> freely &mdash;
+      the code runs via <code>runPythonAsync</code>.
+    </p>
+
+    <textarea class="editor" id="editor-playground" rows="16">
+# Ideas to try:
+#   import json, re, datetime, collections, itertools, math, statistics
+#   await micropip.install("package-name") for PyPI packages
+#   from js import document, window, fetch for browser APIs
+#   from pyodide.http import pyfetch for HTTP requests
+
+import math
+import statistics
+
+# Generate the first 20 primes using a sieve
+def sieve(n):
+    is_prime = [True] * (n + 1)
+    is_prime[0] = is_prime[1] = False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if is_prime[i]:
+            for j in range(i*i, n + 1, i):
+                is_prime[j] = False
+    return [i for i in range(n + 1) if is_prime[i]]
+
+primes = sieve(100)
+print(f"Primes up to 100: {primes}")
+print(f"Count: {len(primes)}")
+print(f"Sum: {sum(primes)}")
+print(f"Mean: {statistics.mean(primes):.1f}")
+print(f"Largest gap: {max(b - a for a, b in zip(primes, primes[1:]))}")
+</textarea>
+    <button class="run-btn" onclick="runEditor('playground')" id="btn-playground">Run</button>
+    <div class="output" id="output-playground">Waiting for Pyodide to load...</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 10: Further reading -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <h2><span class="num">10</span> Further Reading</h2>
+    <ul>
+      <li><a href="https://pyodide.org/en/stable/" target="_blank">Pyodide Documentation</a> &mdash; official docs, API reference, package list</li>
+      <li><a href="https://pyodide.org/en/stable/usage/quickstart.html" target="_blank">Pyodide Quickstart</a> &mdash; getting started guide</li>
+      <li><a href="https://pyodide.org/en/stable/usage/downloading-and-deploying.html" target="_blank">Downloading &amp; Deploying Pyodide</a> &mdash; self-hosting guide</li>
+      <li><a href="https://simonwillison.net/2026/Feb/6/pydantic-monty/" target="_blank">Simon Willison: Pydantic's Monty in WASM</a> &mdash; compiling Rust to WASM wheels for Pyodide</li>
+      <li><a href="https://github.com/pydantic/monty" target="_blank">Pydantic Monty</a> &mdash; sandboxed Python subset in Rust/WASM</li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/WebAssembly" target="_blank">MDN: WebAssembly</a> &mdash; browser API reference</li>
+      <li><a href="https://webassembly.org" target="_blank">WebAssembly.org</a> &mdash; spec, tools, and ecosystem</li>
+      <li><a href="https://emscripten.org" target="_blank">Emscripten</a> &mdash; the compiler toolchain behind Pyodide</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  Built with <a href="https://pyodide.org" target="_blank">Pyodide</a> v0.29.3 &amp;
+  <a href="https://webassembly.org" target="_blank">WebAssembly</a>.
+  Inspired by <a href="https://simonwillison.net/2026/Feb/6/pydantic-monty/" target="_blank">Simon Willison's WASM explorations</a>.
+</footer>
+
+<script>
+// =============================================================================
+// Pyodide initialization and example runners
+// =============================================================================
+
+let pyodide = null;
+let pyodideReady = false;
+
+// Capture Python stdout/stderr
+function createOutputCapture() {
+  return {
+    stdout: [],
+    stderr: [],
+    getOutput() {
+      const out = this.stdout.join('');
+      const err = this.stderr.join('');
+      return err ? out + '\n[stderr]\n' + err : out;
+    }
+  };
+}
+
+async function initPyodide() {
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+
+  try {
+    statusText.textContent = 'Downloading Pyodide runtime (~7 MB)...';
+    pyodide = await loadPyodide();
+
+    statusText.textContent = 'Loading micropip...';
+    await pyodide.loadPackage('micropip');
+
+    pyodideReady = true;
+    statusDot.classList.add('ready');
+    statusText.textContent = `Pyodide ready (Python ${pyodide.version})`;
+
+    // Enable all buttons
+    document.querySelectorAll('.run-btn').forEach(btn => btn.disabled = false);
+
+    // Update all waiting outputs
+    document.querySelectorAll('.output').forEach(el => {
+      if (el.textContent === 'Waiting for Pyodide to load...') {
+        el.textContent = 'Ready. Click Run to execute.';
+      }
+    });
+  } catch (err) {
+    statusDot.classList.add('error');
+    statusText.textContent = `Failed to load Pyodide: ${err.message}`;
+    console.error('Pyodide init error:', err);
+  }
+}
+
+// Run a hardcoded Python example by section id
+async function runExample(id) {
+  if (!pyodideReady) return;
+
+  const outputEl = document.getElementById(`output-${id}`);
+  const btn = document.getElementById(`btn-${id}`);
+  btn.disabled = true;
+  outputEl.className = 'output';
+  outputEl.textContent = 'Running...';
+
+  try {
+    let code;
+    if (id === 'ex2') {
+      code = `
+import sys
+print(f"Python {sys.version}")
+print(f"Platform: {sys.platform}")
+print(f"Running in WASM: {'emscripten' in sys.platform}")
+`;
+    } else if (id === 'ex4') {
+      code = `
+import micropip
+await micropip.install("./tutorial_utils-0.1.0-py3-none-any.whl")
+
+import tutorial_utils as tu
+print(tu.demo())
+`;
+    }
+
+    pyodide.setStdout({ batched: (msg) => {
+      outputEl.textContent = (outputEl.textContent === 'Running...' ? '' : outputEl.textContent) + msg + '\n';
+    }});
+    pyodide.setStderr({ batched: (msg) => {
+      outputEl.textContent += '[stderr] ' + msg + '\n';
+    }});
+
+    const result = await pyodide.runPythonAsync(code);
+    if (outputEl.textContent === 'Running...') {
+      outputEl.textContent = result != null ? String(result) : '(no output)';
+    }
+  } catch (err) {
+    outputEl.className = 'output error';
+    outputEl.textContent = `Error: ${err.message}`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// Run code from a textarea editor
+async function runEditor(id) {
+  if (!pyodideReady) return;
+
+  const editor = document.getElementById(`editor-${id}`);
+  const outputEl = document.getElementById(`output-${id}`);
+  const btn = document.getElementById(`btn-${id}`);
+  btn.disabled = true;
+  outputEl.className = 'output';
+  outputEl.textContent = 'Running...';
+
+  try {
+    const code = editor.value;
+
+    pyodide.setStdout({ batched: (msg) => {
+      outputEl.textContent = (outputEl.textContent === 'Running...' ? '' : outputEl.textContent) + msg + '\n';
+    }});
+    pyodide.setStderr({ batched: (msg) => {
+      outputEl.textContent += '[stderr] ' + msg + '\n';
+    }});
+
+    const result = await pyodide.runPythonAsync(code);
+    if (outputEl.textContent === 'Running...') {
+      outputEl.textContent = result != null ? String(result) : '(no output)';
+    }
+  } catch (err) {
+    outputEl.className = 'output error';
+    outputEl.textContent = `Error: ${err.message}`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// Run the standalone WASM demo (Section 1)
+async function runWasmDemo() {
+  const outputEl = document.getElementById('wasm-output');
+  outputEl.className = 'output';
+  outputEl.textContent = 'Loading add.wasm...';
+
+  try {
+    const response = await fetch('./add.wasm');
+    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    const bytes = await response.arrayBuffer();
+    outputEl.textContent = `Loaded ${bytes.byteLength} bytes of WASM\n`;
+
+    const { instance } = await WebAssembly.instantiate(bytes);
+    const add = instance.exports.add;
+
+    outputEl.textContent += `\nWebAssembly add() function loaded!\n`;
+    outputEl.textContent += `\n  add(40, 2)   = ${add(40, 2)}`;
+    outputEl.textContent += `\n  add(100, 23) = ${add(100, 23)}`;
+    outputEl.textContent += `\n  add(-5, 10)  = ${add(-5, 10)}`;
+    outputEl.textContent += `\n  add(0, 0)    = ${add(0, 0)}`;
+    outputEl.textContent += `\n\nThis tiny .wasm file (${bytes.byteLength} bytes) was loaded`;
+    outputEl.textContent += `\nfrom a relative path and executed by your browser's WASM VM.`;
+  } catch (err) {
+    outputEl.className = 'output error';
+    outputEl.textContent = `Error: ${err.message}\n\nNote: The WASM demo requires serving from a web server.\nTry: python -m http.server (in the tutorial/ directory)`;
+  }
+}
+
+// Handle Tab key in textareas
+document.querySelectorAll('.editor').forEach(editor => {
+  editor.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const start = editor.selectionStart;
+      const end = editor.selectionEnd;
+      editor.value = editor.value.substring(0, start) + '    ' + editor.value.substring(end);
+      editor.selectionStart = editor.selectionEnd = start + 4;
+    }
+    // Ctrl/Cmd+Enter to run
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      const id = editor.id.replace('editor-', '');
+      const btn = document.getElementById(`btn-${id}`);
+      if (btn && !btn.disabled) btn.click();
+    }
+  });
+});
+
+// Start loading Pyodide
+initPyodide();
+</script>
+
+</body>
+</html>

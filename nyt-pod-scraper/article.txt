@@ -1,0 +1,59 @@
+In July 2025, the Justice Department announced it would not make any additional files public from its investigation into child sex trafficker Jeffrey Epstein. The backlash against the decision was swift — and came from some unexpected corners of the internet.
+
+A chorus of right-wing commentators and influencers openly criticized President Donald Trump and his administration for failing to follow through on their campaign promise to release the federal documents. Political podcasters who had embraced Trump during his reelection campaign were up in arms, with social media figures like Joe Rogan and Andrew Schulz publicly pressuring the administration to reverse course.
+
+The New York Times tracked this growing discontent across the GOP base closely for months, culminating with the near-unanimous passage of the Epstein Files Transparency Act by Congress last November. An AI-generated report, delivered directly to the email inboxes of journalists, was an essential tool in the Times’ coverage. It was also one of the first signals that conservative media was turning against the administration, according to Zach Seward, editorial director for AI initiatives at the Times. (Seward was once an associate editor at Nieman Lab.)
+
+
+RELATED ARTICLE
+Local newsrooms are using AI to listen in on public meetings
+March 13, 2025
+Built in-house and known internally as the “Manosphere Report,” the tool uses large language models (LLMs) to transcribe and summarize new episodes of dozens of podcasts.
+“The Manosphere Report gave us a really fast and clear signal that this was not going over well with that segment of the President’s base,” said Seward. “There was a direct link between seeing that and then diving in to actually cover it.”
+
+Broadly speaking, the “manosphere” includes online communities that promote narrow and patriarchal definitions of masculinity, as well as misogynistic and anti-feminist views. Frequently, it overlaps with MAGA and far-right social media ecosystems. After the reelection of Donald Trump, more concerted coverage of the manosphere became a priority across the Times.
+
+“In order to adequately cover this administration — among many other sources — it seemed crucial to have an eye on influencers, largely conservative young male influencers,” Seward told me. “It turned out there were enough specific requests and enough broad interest [in the newsroom] that it made sense to automate sending that out.”
+
+Launched a year ago, the Manosphere Report now follows about 80 podcasts hand-selected by reporters at the Times on desks covering politics, public health, and internet culture. That includes right-wing podcasts like The Ben Shapiro Show, Red Scare with “Dimes Square” shock jocks Dasha Nekrasova and Anna Khachiyan, and The Clay Travis & Buck Sexton Show, a successor to Rush Limbaugh’s talk radio show. It also keeps tabs on Huberman Lab, a podcast hosted by Stanford neuroscientist Andrew Huberman that has been criticized for spreading health misinformation. Seward notes the report also includes some liberal-leaning shows, like MeidasTouch, an anti-Trump podcast with a largely male audience.
+
+When one of the shows publishes a new episode, the tool automatically downloads it, transcribes it, and summarizes the transcript. Every 24 hours the tool collates those summaries and generates a meta-summary with shared talking points and other notable daily trends. The final report is automatically emailed to journalists each morning at 8 a.m. ET. The Times is exploring how to use this workflow to launch similar AI-generated summary reports for other beats.
+
+Seward says the emails signal when there is a growing sentiment or shift in rhetoric across the manosphere. Ultimately, it falls on Times journalists to deliver stories by chasing leads they find in the reports.
+
+“We would never rely [solely] on the AI-generated summaries,” said Seward. “Reporters are going back and listening to the real [podcasts] but using the report basically as a kind of tip line, or as a nudge to look at something more closely.”
+
+
+RELATED ARTICLE
+This AI tool could give newsrooms “eyes and ears where they don’t have them”
+March 10, 2025
+For example, when actress Sydney Sweeney’s American Eagle ad became a culture war flashpoint last summer, Times journalists noticed, in part through the reports, that right-wing podcast figures were shaping the backlash. Further analysis demonstrated that these commentators had helped to make it a controversy in the first place. Podcasters had been talking about a supposed progressive uproar against Sweeney when there were still only a few thousands posts about the ad on X, the reporters found.
+The Times is not the first newsroom to turn to LLMs to parse through the mountains of audio and video material on the internet that journalists are expected to consume to keep on top of their beats. Local news outlets across the country have been using LLMs to keep tabs on school board and town hall meeting livestreams through email summaries. Last year, my colleague Neel covered “Roganbot,” a tool created by AI consulting lab Verso to generate searchable transcripts of The Joe Rogan Experience podcast. Among several features, the tool suggests potentially controversial or false statements to fact-check.
+
+The Manosphere Report was built by the Times’ AI Initiatives Team, a small newsroom unit launched in 2024. While other major newsrooms in the U.S. have explored using AI to build reader-facing chatbots or to assist with drafting or editing articles, the AI Initiatives Team has largely emphasized using generative AI for data analysis and investigative reporting in the newsroom. The team has also built other tools to scale up and operationalize more basic use cases for LLMs, like transcription and summarization.
+
+Seward said that the Manosphere Report was an outgrowth of one of those existing tools, called Cheatsheet.
+
+That tool started as a line of script on the laptop of Dylan Freedman, a machine learning engineer and AI project manager. An investigative reporter at the Times, Jesse Drucker, had approached Freedman with a list of 10,000 people who had registered for a tax break available to residents of Puerto Rico.
+
+“He said, I just can’t Google 10,000 people — but of course, a machine can,” said Seward.
+
+
+RELATED ARTICLE
+AI news that’s fit to print: The New York Times’ editorial AI director on the current state of AI-powered journalism
+March 13, 2024
+Freedman was able to use LLMs to automatically Google the names, inspect the results, and identify people whose financial history would be worth digging into further. The tool could rate the likelihood that someone had a job in crypto or that they had been involved in litigation, among other signals that they were a person of interest. The resulting investigation, published in May 2024, uncovered widespread abuse of the tax breaks.
+“That was the first light bulb,” said Seward. From there, the Initiatives Team started trialing other applications of LLMs to process large, messy datasets and file dumps on a case-by-case basis. Today, many of those live in a single spreadsheet-based tool. Reporters can drop datasets into Cheatsheet and then run different preset scripts and prompts. Each capability in the menu is known as a “recipe.” Some of those recipes, like transcribing thousands of hours of video footage and summarizing transcriptions, are foundational to the Manosphere Report.
+
+Still in its beta, Cheatsheet has already been tested on about 300 users in the newsroom, with 50 of those being “really active users,” according to Seward. Right now, at least one new project is created in Cheatsheet every day. The tool has been used to investigate an election-interference group, to transcribe and translate Syrian prison records, and to find recent instances of Trump talking about Jan. 6. At times, Cheatsheet has even been used to take on more thorough historical analysis of podcasts.
+
+Last spring, the Times ran an investigation looking at the medical claims Dr. Mehmet Oz had made throughout his career as a TV and social media personality, after he was tapped by the Trump administration to lead the Centers for Medicare and Medicaid Services. Using Cheatsheet, the reporters were able to analyze statements made by Oz across 2,500 media  appearances, clips from “The Dr. Oz Show,” and social media posts. The investigation showed that Oz had financial ties to some products he’d promoted on air, including those that have little scientific evidence of health benefits.
+
+Pulitzer Prize award
+RELATED ARTICLE
+How this year’s Pulitzer awardees used AI in their reporting
+May 22, 2025
+In February, Cheatsheet will be rolled out to every journalist in the Times newsroom, Seward confirmed to Nieman Lab. Staffers will learn to use it during optional training sessions the Initiatives Team is offering this year.
+As with the Manosphere Report, Cheatsheet is rooted in a philosophy that creating new text and images for publication is not the most effective use case for generative AI in a newsroom like the Times. Rather, Seward sees the technology as a way to amplify the newsroom’s existing investigative power.
+
+“Cheatsheet is replicable and I hope we can open source it one day. Its tech is not going to be our differentiator or competitive advantage,” said Seward, who posited instead that the tool is a force multiplier for the Times’ beat reporting. “The reason to build it is because it helps us double down on an existing competitive advantage, which is, we’re more likely to have 500 hours of leaked recorded video in the first place.”

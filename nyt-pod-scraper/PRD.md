@@ -37,3 +37,6 @@ Likewiser Rather than using Cognito for LLM access locally you can create a pyth
 
 I am particuarly interested locally in refining the admin app, and the text and format of the emails, The back end architecture can be refined later. 
 
+# Show and tell
+
+The repo you are working in has a github pages turned on e.g. https://ian-bmj.github.io/bmj-ai-rapid-prototype/tutorial/pyodide-wasm-tutorial.html, after doing the above work, create a site that can be served in GHPages that gives a nice outline of what you are aiming for, what you have done so far, and provides architectural diagrams of what has either been done, or is planned. 

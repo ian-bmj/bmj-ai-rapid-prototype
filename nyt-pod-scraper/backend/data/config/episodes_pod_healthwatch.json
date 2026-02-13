@@ -1,0 +1,103 @@
+[
+  {
+    "id": "ep_hw_001",
+    "podcast_id": "pod_healthwatch",
+    "title": "NHS Workforce Crisis: The 2026 Staffing Plan Under Scrutiny",
+    "description": "We examine the government's long-awaited NHS workforce strategy, speaking to frontline clinicians, health economists, and the Health Secretary's senior adviser.",
+    "published": "2026-02-12T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/hw001.mp3",
+    "duration_seconds": 2520,
+    "guid": "hw-ep-001",
+    "status": "summarized",
+    "scraped_at": "2026-02-12T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-12T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-12T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_healthwatch/ep_hw_001.txt",
+    "transcript": "The NHS workforce plan released last week proposes expanding medical school places by 40% over the next decade...",
+    "summary_key": "pod_healthwatch/ep_hw_001.json",
+    "summary": {
+      "summary": "The episode dissects the government's new NHS workforce strategy, which pledges a 40% increase in medical school places and a major expansion of physician associate roles. Health economist Professor Sarah Chen argues the plan underestimates the cost of training infrastructure, while BMA council chair Dr Adeola Mensah warns that without immediate measures to improve retention, new graduates will simply leave for better-paying systems abroad. The Health Secretary's adviser, James Lockhart, defends the timeline, pointing to parallel investment in digital health and AI diagnostics to reduce clinician workload. Notable tension emerges between those who see physician associates as a pragmatic solution and senior clinicians who argue the roles lack sufficient clinical oversight. The programme also covers the Royal College of Nursing's response, which describes the plan as 'a decade too late and a billion short'.",
+      "gist": "Government NHS workforce plan faces criticism for slow timelines and underestimated costs despite ambitious training expansion.",
+      "themes": [
+        "NHS",
+        "Health Policy",
+        "Workforce Planning",
+        "Medical Education",
+        "Health Economics"
+      ],
+      "key_quotes": [
+        "We are essentially asking today's patients to wait a decade for tomorrow's doctors. -- Prof. Sarah Chen",
+        "The retention crisis is the elephant in the room. You can train all the doctors you want, but if they leave within five years, you've solved nothing. -- Dr Adeola Mensah",
+        "Digital health isn't a replacement for clinicians, but it can free up 30% of a GP's time spent on administrative tasks. -- James Lockhart"
+      ]
+    }
+  },
+  {
+    "id": "ep_hw_002",
+    "podcast_id": "pod_healthwatch",
+    "title": "Mental Health Act Reform: What Changes and What Doesn't",
+    "description": "A deep dive into the proposed Mental Health Act reforms, with analysis of what they mean for patients, clinicians, and the justice system.",
+    "published": "2026-02-09T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/hw002.mp3",
+    "duration_seconds": 1980,
+    "guid": "hw-ep-002",
+    "status": "summarized",
+    "scraped_at": "2026-02-09T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-09T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-09T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_healthwatch/ep_hw_002.txt",
+    "transcript": "The Mental Health Act 1983 has long been criticised for its disproportionate impact on Black communities...",
+    "summary_key": "pod_healthwatch/ep_hw_002.json",
+    "summary": {
+      "summary": "This episode analyses the draft Mental Health Act reforms, focusing on the removal of learning disability and autism as grounds for detention, new patient choice provisions, and the introduction of statutory advance directives. Psychiatrist Dr Femi Adeyemi explains that while the reforms address longstanding racial disparities in sectioning rates, the proposed community treatment order changes may create new gaps in crisis care. Legal expert Professor Ruth Meredith notes the tension between patient autonomy and public safety, particularly in forensic settings. The episode highlights that despite three years of consultation, key questions about funding for community mental health services remain unanswered, which campaigners say will undermine the legislation's impact.",
+      "gist": "Mental Health Act reforms address racial disparities but risk creating care gaps without adequate community funding.",
+      "themes": [
+        "Mental Health",
+        "Health Policy",
+        "Racial Disparities",
+        "Patient Rights",
+        "NHS"
+      ],
+      "key_quotes": [
+        "The Act finally acknowledges what decades of data have shown: Black men are four times more likely to be sectioned than their white counterparts. -- Dr Femi Adeyemi",
+        "Rights on paper mean nothing without services on the ground. -- Mind CEO spokesperson"
+      ]
+    }
+  },
+  {
+    "id": "ep_hw_003",
+    "podcast_id": "pod_healthwatch",
+    "title": "Obesity Strategy 2.0: Beyond the Sugar Tax",
+    "description": "With childhood obesity rates still climbing, we ask whether the government's refreshed obesity strategy goes far enough.",
+    "published": "2026-02-06T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/hw003.mp3",
+    "duration_seconds": 2280,
+    "guid": "hw-ep-003",
+    "status": "summarized",
+    "scraped_at": "2026-02-06T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-06T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-06T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_healthwatch/ep_hw_003.txt",
+    "transcript": "Five years on from the sugar levy, childhood obesity in England shows no sign of declining...",
+    "summary_key": "pod_healthwatch/ep_hw_003.json",
+    "summary": {
+      "summary": "The episode reviews the government's updated obesity strategy, which introduces advertising restrictions for HFSS foods before 9pm, mandatory calorie labelling in all food outlets, and a new GLP-1 receptor agonist prescribing programme for high-risk patients. Public health professor Dame Sally Holroyd argues that the strategy still lacks teeth on junk food pricing and industry reformulation targets. The programme explores the GLP-1 prescribing expansion, noting that while drugs like semaglutide show remarkable efficacy, the annual per-patient cost of around 2,500 GBP raises questions about NHS affordability at scale. A food industry representative argues that the advertising restrictions will disproportionately harm smaller producers while multinational brands simply shift to digital channels outside regulation.",
+      "gist": "Updated obesity strategy introduces advertising bans and GLP-1 prescribing but critics question industry accountability and NHS costs.",
+      "themes": [
+        "Public Health",
+        "Obesity",
+        "Health Policy",
+        "Pharma Industry",
+        "Health Economics",
+        "NHS"
+      ],
+      "key_quotes": [
+        "You cannot tackle obesity with prescription pads alone. This needs a fundamental restructuring of the food environment. -- Dame Sally Holroyd",
+        "At 2,500 per patient per year, prescribing our way out of the obesity crisis would bankrupt the drugs budget. -- NHS England clinical director"
+      ]
+    }
+  }
+]

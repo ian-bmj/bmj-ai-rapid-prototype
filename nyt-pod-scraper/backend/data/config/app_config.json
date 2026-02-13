@@ -1,0 +1,40 @@
+{
+  "data_dir": "/home/user/bmj-ai-rapid-prototype/nyt-pod-scraper/backend/data",
+  "audio_dir": "/home/user/bmj-ai-rapid-prototype/nyt-pod-scraper/backend/data/audio",
+  "transcripts_dir": "/home/user/bmj-ai-rapid-prototype/nyt-pod-scraper/backend/data/transcripts",
+  "summaries_dir": "/home/user/bmj-ai-rapid-prototype/nyt-pod-scraper/backend/data/summaries",
+  "config_dir": "/home/user/bmj-ai-rapid-prototype/nyt-pod-scraper/backend/data/config",
+  "emails_dir": "/home/user/bmj-ai-rapid-prototype/nyt-pod-scraper/backend/data/emails",
+  "llm_provider": "openai",
+  "llm_api_key": "",
+  "llm_model": "gpt-4o",
+  "llm_models": {
+    "openai": "gpt-4o",
+    "anthropic": "claude-sonnet-4-20250514",
+    "google": "gemini-2.0-flash"
+  },
+  "smtp_server": "smtp.gmail.com",
+  "smtp_port": 587,
+  "smtp_use_tls": true,
+  "smtp_username": "",
+  "smtp_password": "",
+  "email_sender": "nyt-pod-scraper@bmj.com",
+  "email_sender_name": "BMJ Pod Digest",
+  "distribution_lists": {
+    "daily": [
+      "editor@bmj.com",
+      "news.desk@bmj.com",
+      "health.policy@bmj.com"
+    ],
+    "weekly": [
+      "editor-in-chief@bmj.com",
+      "editorial.board@bmj.com",
+      "strategy@bmj.com"
+    ]
+  },
+  "scrape_interval_minutes": 60,
+  "max_episodes_per_feed": 5,
+  "download_audio": true,
+  "auto_transcribe": false,
+  "auto_summarize": false
+}

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMJ Pod Monitor - Project Showcase</title>
+
+  <!-- BMJ Pattern Library -->
+  <link rel="stylesheet" href="../../bmj-pat-lib/assets/css/bmj-base.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/assets/css/bmj-typography.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/components/header/header.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/components/footer/footer.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/components/buttons/buttons.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/components/cards/cards.css">
+
+  <style>
+    :root {
+      --pod-blue: #005EB8;
+      --pod-violet: #6F42C1;
+      --pod-green: #28A745;
+      --pod-red: #DC3545;
+      --pod-teal: #17A2B8;
+      --pod-orange: #FD7E14;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--pod-blue) 0%, var(--pod-violet) 100%);
+      color: #fff;
+      padding: 4rem 1rem;
+      text-align: center;
+    }
+    .hero h1 { font-size: 2.8rem; margin-bottom: 0.75rem; }
+    .hero .subtitle { font-size: 1.25rem; opacity: 0.92; max-width: 700px; margin: 0 auto 2rem; line-height: 1.6; }
+    .hero .badge-row { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .hero .badge-row span {
+      background: rgba(255,255,255,0.2);
+      padding: 0.35rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* Sections */
+    .section { padding: 3rem 1rem; max-width: 1100px; margin: 0 auto; }
+    .section-alt { background: var(--bg-light); }
+    .section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      color: var(--pod-blue);
+    }
+    .section .section-lead {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    /* Inspiration */
+    .inspiration-box {
+      background: #fff;
+      border-left: 4px solid var(--pod-violet);
+      padding: 1.5rem 2rem;
+      border-radius: 0 8px 8px 0;
+      box-shadow: var(--box-shadow-sm);
+      margin-bottom: 2rem;
+    }
+    .inspiration-box h3 { color: var(--pod-violet); margin-bottom: 0.5rem; }
+    .inspiration-box blockquote {
+      border-left: none;
+      padding: 0;
+      margin: 0.75rem 0;
+      font-style: italic;
+      color: var(--text-secondary);
+      background: none;
+    }
+
+    /* Feature cards */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.75rem;
+      box-shadow: var(--box-shadow-sm);
+      border-top: 4px solid var(--pod-blue);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--box-shadow-md);
+    }
+    .feature-card .icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .feature-card h3 { margin-bottom: 0.5rem; font-size: 1.15rem; }
+    .feature-card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
+    .feature-card.violet { border-top-color: var(--pod-violet); }
+    .feature-card.green { border-top-color: var(--pod-green); }
+    .feature-card.teal { border-top-color: var(--pod-teal); }
+    .feature-card.red { border-top-color: var(--pod-red); }
+    .feature-card.orange { border-top-color: var(--pod-orange); }
+
+    /* Architecture diagram */
+    .arch-diagram {
+      background: #fff;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: var(--box-shadow-sm);
+      overflow-x: auto;
+    }
+    .arch-svg { width: 100%; max-width: 1000px; margin: 0 auto; display: block; }
+
+    /* Pipeline flow */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+    .pipeline-step {
+      background: #fff;
+      border: 2px solid var(--pod-blue);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      text-align: center;
+      min-width: 130px;
+      position: relative;
+    }
+    .pipeline-step .step-icon { font-size: 1.5rem; display: block; margin-bottom: 0.35rem; }
+    .pipeline-step .step-label { font-size: 0.85rem; font-weight: 600; color: var(--pod-blue); }
+    .pipeline-step .step-detail { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem; }
+    .pipeline-arrow {
+      color: var(--pod-blue);
+      font-size: 1.5rem;
+      padding: 0 0.5rem;
+      font-weight: bold;
+    }
+    .pipeline-step.active {
+      background: var(--pod-blue);
+      color: #fff;
+    }
+    .pipeline-step.active .step-label,
+    .pipeline-step.active .step-detail { color: #fff; }
+
+    /* Status table */
+    .status-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow-sm);
+    }
+    .status-table th {
+      background: var(--pod-blue);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    .status-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.9rem;
+    }
+    .status-table tr:last-child td { border-bottom: none; }
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .status-done { background: #d4edda; color: #155724; }
+    .status-progress { background: #fff3cd; color: #856404; }
+    .status-planned { background: #e2e3e5; color: #383d41; }
+
+    /* Tech stack */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .tech-item {
+      background: #fff;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .tech-item .tech-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .tech-item .tech-name { font-weight: 600; font-size: 0.95rem; }
+    .tech-item .tech-role { font-size: 0.8rem; color: var(--text-secondary); }
+    .bg-blue { background: #e3f0ff; color: var(--pod-blue); }
+    .bg-violet { background: #f0e6ff; color: var(--pod-violet); }
+    .bg-green { background: #e6f9ed; color: var(--pod-green); }
+    .bg-teal { background: #e0f7fa; color: var(--pod-teal); }
+    .bg-orange { background: #fff3e0; color: var(--pod-orange); }
+    .bg-red { background: #fde8e8; color: var(--pod-red); }
+
+    /* AWS Architecture */
+    .aws-arch {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .aws-layer {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+    .aws-layer h4 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid;
+    }
+    .aws-layer.frontend h4 { color: var(--pod-blue); border-color: var(--pod-blue); }
+    .aws-layer.compute h4 { color: var(--pod-orange); border-color: var(--pod-orange); }
+    .aws-layer.data h4 { color: var(--pod-green); border-color: var(--pod-green); }
+    .aws-layer.ai h4 { color: var(--pod-violet); border-color: var(--pod-violet); }
+    .aws-layer.auth h4 { color: var(--pod-red); border-color: var(--pod-red); }
+    .aws-services {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .aws-service {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .aws-service.s3 { background: #e6f9ed; color: #155724; }
+    .aws-service.cloudfront { background: #fff3e0; color: #7b3f00; }
+    .aws-service.lambda { background: #fff3e0; color: #7b3f00; }
+    .aws-service.step { background: #fde8e8; color: #721c24; }
+    .aws-service.dynamo { background: #e3f0ff; color: #004085; }
+    .aws-service.bedrock { background: #f0e6ff; color: #3d1a78; }
+    .aws-service.cognito { background: #fde8e8; color: #721c24; }
+    .aws-service.ses { background: #e0f7fa; color: #006064; }
+    .aws-service.eventbridge { background: #fff3cd; color: #856404; }
+    .aws-service.apigw { background: #fff3e0; color: #7b3f00; }
+
+    /* CTA */
+    .cta-box {
+      background: linear-gradient(135deg, var(--pod-blue) 0%, var(--pod-violet) 100%);
+      color: #fff;
+      padding: 2.5rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .cta-box h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .cta-box p { opacity: 0.9; margin-bottom: 1.5rem; }
+    .cta-box .btn { background: #fff; color: var(--pod-blue); font-weight: 600; border: none; }
+    .cta-box .btn:hover { background: #f0f0f0; }
+
+    /* Links */
+    .nav-links { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; justify-content: center; }
+    .nav-links a {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .nav-links a:hover { background: rgba(255,255,255,0.3); }
+
+    @media (max-width: 736px) {
+      .hero h1 { font-size: 2rem; }
+      .pipeline { flex-direction: column; }
+      .pipeline-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bmj-header">
+    <div class="bmj-header-top">
+      <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <strong style="color:var(--pod-blue);font-size:1.2rem;">BMJ</strong>
+            <span style="color:var(--text-secondary);font-size:0.9rem;">Pod Monitor Project</span>
+          </div>
+          <nav>
+            <a href="#overview" class="btn btn-sm btn-outline-primary" style="margin-right:0.5rem;">Overview</a>
+            <a href="#architecture" class="btn btn-sm btn-outline-primary" style="margin-right:0.5rem;">Architecture</a>
+            <a href="#status" class="btn btn-sm btn-outline-primary">Status</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>BMJ Pod Monitor</h1>
+    <p class="subtitle">
+      An AI-powered podcast monitoring platform for editorial intelligence.
+      Automatically scrape, transcribe, and summarize podcasts to surface emerging themes
+      and story leads for BMJ's editorial team.
+    </p>
+    <div class="badge-row">
+      <span>Podcast Scraping</span>
+      <span>AI Transcription</span>
+      <span>LLM Summarization</span>
+      <span>Email Digests</span>
+      <span>Admin Dashboard</span>
+    </div>
+    <div class="nav-links">
+      <a href="../admin-app/index.html">Launch Admin App</a>
+      <a href="#architecture">View Architecture</a>
+      <a href="#status">Implementation Status</a>
+    </div>
+  </section>
+
+  <!-- Inspiration -->
+  <section class="section" id="overview">
+    <h2>Project Inspiration</h2>
+    <p class="section-lead">Inspired by the New York Times' "Manosphere Report" &mdash; an internal tool that uses LLMs to monitor podcasts and surface editorial intelligence.</p>
+
+    <div class="inspiration-box">
+      <h3>The NYT Approach</h3>
+      <p>The New York Times built an AI tool that automatically downloads, transcribes, and summarizes new episodes of dozens of podcasts. Every 24 hours it generates a meta-summary with shared talking points and trends, emailed to journalists each morning.</p>
+      <blockquote>
+        "The Manosphere Report gave us a really fast and clear signal... There was a direct link between seeing that and then diving in to actually cover it."
+        &mdash; Zach Seward, NYT Editorial Director for AI Initiatives
+      </blockquote>
+      <p>BMJ Pod Monitor adapts this approach for health, medical, and public health journalism &mdash; monitoring podcasts that discuss clinical practice, health policy, and medical research to keep BMJ's editorial team informed.</p>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section section-alt">
+    <h2>Core Features</h2>
+    <p class="section-lead">A complete pipeline from podcast feeds to actionable editorial intelligence.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="icon">&#x1F399;</span>
+        <h3>Podcast Feed Monitoring</h3>
+        <p>Automatically track RSS feeds from health and medical podcasts. Add or remove podcasts, categorize them, and control which are actively monitored.</p>
+      </div>
+      <div class="feature-card violet">
+        <span class="icon">&#x1F4DD;</span>
+        <h3>AI Transcription</h3>
+        <p>Audio episodes are automatically transcribed using speech-to-text models (OpenAI Whisper or AWS Transcribe), creating searchable text records.</p>
+      </div>
+      <div class="feature-card green">
+        <span class="icon">&#x1F9E0;</span>
+        <h3>LLM Summarization</h3>
+        <p>Transcripts are processed by LLMs (Claude, GPT, or Gemini) to generate concise summaries, gists, key themes, and notable quotes.</p>
+      </div>
+      <div class="feature-card teal">
+        <span class="icon">&#x1F4CA;</span>
+        <h3>Cross-Podcast Analysis</h3>
+        <p>Daily and weekly meta-analysis across all monitored podcasts identifies shared themes, emerging trends, and shifts in rhetoric.</p>
+      </div>
+      <div class="feature-card red">
+        <span class="icon">&#x2709;</span>
+        <h3>Email Digests</h3>
+        <p>Professional email newsletters delivered daily and weekly to editorial distribution lists, with actionable story leads and investigation suggestions.</p>
+      </div>
+      <div class="feature-card orange">
+        <span class="icon">&#x2699;</span>
+        <h3>Admin Dashboard</h3>
+        <p>Web-based SPA for managing podcasts, reviewing transcripts and summaries, previewing emails, and configuring the platform.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Processing Pipeline -->
+  <section class="section">
+    <h2>Processing Pipeline</h2>
+    <p class="section-lead">How a podcast episode flows through the system from RSS feed to editorial inbox.</p>
+
+    <div class="pipeline">
+      <div class="pipeline-step active">
+        <span class="step-icon">&#x1F4E1;</span>
+        <span class="step-label">RSS Feed</span>
+        <span class="step-detail">Detect new episodes</span>
+      </div>
+      <span class="pipeline-arrow">&#x2192;</span>
+      <div class="pipeline-step">
+        <span class="step-icon">&#x2B07;</span>
+        <span class="step-label">Download</span>
+        <span class="step-detail">Fetch audio to S3</span>
+      </div>
+      <span class="pipeline-arrow">&#x2192;</span>
+      <div class="pipeline-step">
+        <span class="step-icon">&#x1F3A4;</span>
+        <span class="step-label">Transcribe</span>
+        <span class="step-detail">Speech-to-text</span>
+      </div>
+      <span class="pipeline-arrow">&#x2192;</span>
+      <div class="pipeline-step">
+        <span class="step-icon">&#x1F9E0;</span>
+        <span class="step-label">Summarize</span>
+        <span class="step-detail">LLM analysis</span>
+      </div>
+      <span class="pipeline-arrow">&#x2192;</span>
+      <div class="pipeline-step">
+        <span class="step-icon">&#x1F4CA;</span>
+        <span class="step-label">Digest</span>
+        <span class="step-detail">Cross-pod themes</span>
+      </div>
+      <span class="pipeline-arrow">&#x2192;</span>
+      <div class="pipeline-step">
+        <span class="step-icon">&#x2709;</span>
+        <span class="step-label">Email</span>
+        <span class="step-detail">Editorial inbox</span>
+      </div>
+    </div>
+
+    <h3 style="margin-top:2.5rem;">Scheduled Operations</h3>
+    <div class="features-grid" style="margin-top:1rem;">
+      <div class="feature-card teal">
+        <h3>Continuous Scraping</h3>
+        <p>RSS feeds are polled periodically. New episodes are automatically downloaded, transcribed, and summarized as they appear.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Daily Digest (8:00 AM)</h3>
+        <p>Each morning, summaries from the last 24 hours are collated into a cross-podcast analysis, identifying shared themes and notable shifts.</p>
+      </div>
+      <div class="feature-card violet">
+        <h3>Weekly Analysis (Monday)</h3>
+        <p>Weekly meta-analysis compiles daily digests into a broader trend report with story leads and investigation suggestions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section class="section section-alt" id="architecture">
+    <h2>AWS Architecture</h2>
+    <p class="section-lead">Production deployment on AWS following BMJ's established architectural patterns.</p>
+
+    <div class="aws-arch">
+      <div class="aws-layer frontend">
+        <h4>Frontend &amp; Delivery</h4>
+        <div class="aws-services">
+          <span class="aws-service s3">S3 &mdash; Static SPA hosting</span>
+          <span class="aws-service cloudfront">CloudFront &mdash; CDN distribution</span>
+          <span class="aws-service cognito">Cognito &mdash; User authentication</span>
+        </div>
+      </div>
+      <div class="aws-layer compute">
+        <h4>Compute &amp; Orchestration</h4>
+        <div class="aws-services">
+          <span class="aws-service apigw">API Gateway &mdash; REST API</span>
+          <span class="aws-service lambda">Lambda &mdash; Scraper function</span>
+          <span class="aws-service lambda">Lambda &mdash; Transcriber function</span>
+          <span class="aws-service lambda">Lambda &mdash; Summarizer function</span>
+          <span class="aws-service lambda">Lambda &mdash; Email generator</span>
+          <span class="aws-service step">Step Functions &mdash; Pipeline orchestration</span>
+          <span class="aws-service eventbridge">EventBridge &mdash; Scheduled triggers</span>
+        </div>
+      </div>
+      <div class="aws-layer data">
+        <h4>Data &amp; Storage</h4>
+        <div class="aws-services">
+          <span class="aws-service s3">S3 &mdash; Audio files</span>
+          <span class="aws-service s3">S3 &mdash; Transcripts &amp; summaries</span>
+          <span class="aws-service s3">S3 &mdash; Configuration</span>
+          <span class="aws-service dynamo">DynamoDB &mdash; Podcast metadata</span>
+          <span class="aws-service dynamo">DynamoDB &mdash; Episode tracking</span>
+          <span class="aws-service dynamo">DynamoDB &mdash; Distribution lists</span>
+        </div>
+      </div>
+      <div class="aws-layer ai">
+        <h4>AI &amp; ML Services</h4>
+        <div class="aws-services">
+          <span class="aws-service bedrock">Bedrock (Claude) &mdash; Summarization &amp; analysis</span>
+          <span class="aws-service bedrock">Transcribe / Whisper &mdash; Speech-to-text</span>
+        </div>
+      </div>
+      <div class="aws-layer auth">
+        <h4>Notifications &amp; Monitoring</h4>
+        <div class="aws-services">
+          <span class="aws-service ses">SES &mdash; Email delivery</span>
+          <span class="aws-service eventbridge">CloudWatch &mdash; Logging &amp; monitoring</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 2.5rem;">Local Development Stack</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">For local testing, AWS services are replaced with lightweight local equivalents.</p>
+    <div class="tech-grid">
+      <div class="tech-item">
+        <div class="tech-icon bg-blue">Py</div>
+        <div>
+          <div class="tech-name">Python / Flask</div>
+          <div class="tech-role">Backend API server</div>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon bg-green">FS</div>
+        <div>
+          <div class="tech-name">Local Filesystem</div>
+          <div class="tech-role">S3 mock storage</div>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon bg-violet">AI</div>
+        <div>
+          <div class="tech-name">Multi-LLM Glue</div>
+          <div class="tech-role">OpenAI / Claude / Gemini</div>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon bg-teal">JS</div>
+        <div>
+          <div class="tech-name">Vanilla JS SPA</div>
+          <div class="tech-role">No build step required</div>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon bg-orange">TF</div>
+        <div>
+          <div class="tech-name">Terraform</div>
+          <div class="tech-role">AWS IaC (planned)</div>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon bg-red">J2</div>
+        <div>
+          <div class="tech-name">Jinja2 Templates</div>
+          <div class="tech-role">Email rendering</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Implementation Status -->
+  <section class="section" id="status">
+    <h2>Implementation Status</h2>
+    <p class="section-lead">Current progress across all project components.</p>
+
+    <table class="status-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Admin SPA</strong></td>
+          <td>Dashboard, podcast management, episode viewer, email preview, distribution lists, settings</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>Python Backend API</strong></td>
+          <td>Flask REST API with local filesystem storage, CORS, demo data seeding</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>Podcast Scraper</strong></td>
+          <td>RSS feed parsing, audio download, episode metadata extraction</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>Transcription Module</strong></td>
+          <td>OpenAI Whisper integration, local placeholder mode</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>LLM Summarization</strong></td>
+          <td>Multi-provider support (OpenAI, Anthropic, Google), summary/gist/themes generation</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>Email Templates</strong></td>
+          <td>Professional daily and weekly digest Jinja2 templates with inline CSS</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>Distribution Lists</strong></td>
+          <td>Daily and weekly subscriber management via admin UI</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>Local Dev Environment</strong></td>
+          <td>Local filesystem S3 mock, multi-LLM glue script, demo data</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>Terraform (AWS)</strong></td>
+          <td>S3, CloudFront, Lambda, Step Functions, DynamoDB, Cognito, SES, EventBridge</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>Showcase Site</strong></td>
+          <td>GitHub Pages project overview with architecture diagrams</td>
+          <td><span class="status-badge status-done">Complete</span></td>
+        </tr>
+        <tr>
+          <td><strong>AWS Deployment</strong></td>
+          <td>Actual deployment to AWS (requires credentials)</td>
+          <td><span class="status-badge status-planned">Planned</span></td>
+        </tr>
+        <tr>
+          <td><strong>Strands SDK Integration</strong></td>
+          <td>Migrate LLM calls to AWS Strands Agents SDK</td>
+          <td><span class="status-badge status-planned">Planned</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Try it -->
+  <section class="section section-alt">
+    <h2>Try It Out</h2>
+    <p class="section-lead">Get started with the local development environment.</p>
+
+    <div class="features-grid">
+      <div class="feature-card" style="grid-column: span 2;">
+        <h3>Quick Start (Local Development)</h3>
+        <pre style="background: var(--gray-900); color: #e9ecef; padding: 1.25rem; border-radius: 6px; overflow-x: auto; font-size: 0.85rem; line-height: 1.7;"><code># 1. Navigate to the backend
+cd nyt-pod-scraper/backend
+
+# 2. Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. (Optional) Set your LLM API key
+export LLM_API_KEY=your-api-key-here
+export LLM_PROVIDER=anthropic  # or openai, google
+
+# 5. Start the server
+python app.py
+
+# 6. Open in browser
+# http://localhost:5001
+
+# 7. Click "Seed Demo Data" on the dashboard for sample content</code></pre>
+      </div>
+      <div class="feature-card green">
+        <h3>Demo Mode (No Backend)</h3>
+        <p>The admin app works entirely in demo mode with embedded sample data. No Python backend or API keys required.</p>
+        <a href="../admin-app/index.html" class="btn btn-sm btn-success" style="margin-top: 1rem; display: inline-block;">Launch Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="cta-box">
+      <h3>Ready to Explore?</h3>
+      <p>Launch the admin dashboard to see the full podcast monitoring interface, complete with demo data.</p>
+      <a href="../admin-app/index.html" class="btn btn-lg">Open Admin Dashboard</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bmj-footer">
+    <div class="container">
+      <div class="bmj-footer-grid">
+        <div class="bmj-footer-column">
+          <h3 class="bmj-footer-heading">Pod Monitor</h3>
+          <ul class="bmj-footer-links">
+            <li><a href="../admin-app/index.html">Admin App</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#status">Status</a></li>
+          </ul>
+        </div>
+        <div class="bmj-footer-column">
+          <h3 class="bmj-footer-heading">Resources</h3>
+          <ul class="bmj-footer-links">
+            <li><a href="../PRD.md">PRD</a></li>
+            <li><a href="../article.txt">NYT Article</a></li>
+            <li><a href="../../index.html">BMJ AI Prototype Hub</a></li>
+          </ul>
+        </div>
+        <div class="bmj-footer-column">
+          <h3 class="bmj-footer-heading">Technology</h3>
+          <ul class="bmj-footer-links">
+            <li>Python / Flask</li>
+            <li>Vanilla JS SPA</li>
+            <li>Terraform / AWS</li>
+          </ul>
+        </div>
+      </div>
+      <div class="bmj-footer-bottom">
+        <p class="bmj-footer-copyright">BMJ Pod Monitor &mdash; AI Rapid Prototype Project</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

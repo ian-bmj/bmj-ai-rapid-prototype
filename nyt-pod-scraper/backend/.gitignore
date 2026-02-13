@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+*.egg-info/
+
+# Environment
+.env
+
+# Local data (mock S3)
+data/audio/*.mp3
+data/audio/*.m4a
+data/audio/*.wav
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

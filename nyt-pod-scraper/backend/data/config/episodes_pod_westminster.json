@@ -1,0 +1,66 @@
+[
+  {
+    "id": "ep_wh_001",
+    "podcast_id": "pod_westminster",
+    "title": "Spring Budget Special: Health Spending Decoded",
+    "description": "We parse the Spring Budget's health allocations and ask whether the numbers add up for the NHS and social care.",
+    "published": "2026-02-10T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/wh001.mp3",
+    "duration_seconds": 2100,
+    "guid": "wh-ep-001",
+    "status": "summarized",
+    "scraped_at": "2026-02-10T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-10T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-10T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_westminster/ep_wh_001.txt",
+    "transcript": "The Chancellor's Spring Budget allocated an additional 3.2 billion to the NHS...",
+    "summary_key": "pod_westminster/ep_wh_001.json",
+    "summary": {
+      "summary": "The episode provides line-by-line analysis of the Spring Budget's health allocations. The headline 3.2 billion GBP NHS uplift is examined by health economist Dr Laura Griffiths, who calculates that after adjusting for inflation, pay settlements, and demographic pressures, the real-terms increase is closer to 0.8 billion -- well below what the King's Fund estimates is needed to maintain current service levels. The programme reveals that social care received no new funding beyond existing commitments, prompting the Local Government Association to warn of 'a ticking time bomb for hospital discharge'. Political correspondent James Worth reports on behind-the-scenes Treasury tensions, with the Health Secretary reportedly losing a battle for an additional 1.5 billion for capital investment in crumbling hospital estates. The episode also covers the new 200 million 'health innovation fund' for AI and digital health, which opposition critics call 'a vanity announcement dressed up as reform'.",
+      "gist": "Spring Budget's NHS uplift is far smaller than it appears once inflation and pay pressures are accounted for.",
+      "themes": [
+        "Health Policy",
+        "NHS",
+        "Health Economics",
+        "Political Rhetoric"
+      ],
+      "key_quotes": [
+        "The headline figure of 3.2 billion sounds generous until you subtract 1.4 billion for the pay deal and 800 million for inflation. -- Dr Laura Griffiths",
+        "Social care is the crack in the dam. Every unfunded care home place becomes a blocked hospital bed. -- LGA spokesperson"
+      ]
+    }
+  },
+  {
+    "id": "ep_wh_002",
+    "podcast_id": "pod_westminster",
+    "title": "Tobacco and Vapes Bill: Public Health vs Libertarian Backlash",
+    "description": "The generational smoking ban and vape regulations face fierce parliamentary opposition. We examine the evidence on both sides.",
+    "published": "2026-02-07T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/wh002.mp3",
+    "duration_seconds": 1800,
+    "guid": "wh-ep-002",
+    "status": "summarized",
+    "scraped_at": "2026-02-07T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-07T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-07T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_westminster/ep_wh_002.txt",
+    "transcript": "The Tobacco and Vapes Bill would create a rolling ban preventing anyone born after 2009...",
+    "summary_key": "pod_westminster/ep_wh_002.json",
+    "summary": {
+      "summary": "This episode covers the parliamentary debate around the Tobacco and Vapes Bill, which proposes a generational smoking ban and strict regulations on disposable vapes. Public health advocate Professor Sir Nicholas Wald presents modelling showing the ban could prevent 1.7 million smoking-related deaths over 50 years. Conservative backbencher Marcus Hale argues the legislation is 'nanny statism at its most extreme' and raises concerns about black market growth. The programme also examines the vaping provisions: while harm reduction experts support regulated vaping as a smoking cessation tool, paediatric pulmonologist Dr Jennifer Liu presents data on a 340% increase in under-16 vape-related A&E presentations over three years. The episode highlights the unusual cross-party dynamics, with rebel Conservative and Labour MPs forming an unlikely alliance against the bill's libertarian critics.",
+      "gist": "Tobacco and Vapes Bill balances projected lives saved against libertarian objections and teenage vaping surge concerns.",
+      "themes": [
+        "Health Policy",
+        "Public Health",
+        "Political Rhetoric",
+        "Tobacco & Vaping"
+      ],
+      "key_quotes": [
+        "1.7 million lives over 50 years. That is the prize for getting this legislation right. -- Prof. Sir Nicholas Wald",
+        "We have exchanged one generation's addiction for another. Disposable vapes are the cigarettes of Gen Alpha. -- Dr Jennifer Liu"
+      ]
+    }
+  }
+]

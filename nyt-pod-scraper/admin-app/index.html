@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pod Monitor - BMJ Podcast Intelligence</title>
+
+  <!-- BMJ Pattern Library -->
+  <link rel="stylesheet" href="../../bmj-pat-lib/assets/css/bmj-base.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/assets/css/bmj-typography.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/components/header/header.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/components/footer/footer.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/components/buttons/buttons.css">
+  <link rel="stylesheet" href="../../bmj-pat-lib/components/cards/cards.css">
+
+  <!-- Application Styles -->
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- ===== HEADER ===== -->
+    <header class="bmj-header">
+      <div class="bmj-header-top">
+        <div class="bmj-container">
+          <div class="bmj-header-logo">
+            <div class="app-brand">
+              <div class="app-brand-icon">P</div>
+              <a href="#dashboard" class="app-brand-name">Pod Monitor</a>
+              <span class="demo-badge" id="demo-badge" style="display:none;">Demo Mode</span>
+            </div>
+          </div>
+          <div class="bmj-header-actions">
+            <span class="bmj-header-link text-sm text-muted">BMJ Podcast Intelligence</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="app-nav">
+        <div class="bmj-container">
+          <ul class="app-nav-list">
+            <li><a href="#dashboard" data-nav="dashboard" class="active">Dashboard</a></li>
+            <li><a href="#podcasts" data-nav="podcasts">Podcasts</a></li>
+            <li><a href="#episodes" data-nav="episodes">Episodes</a></li>
+            <li><a href="#email" data-nav="email">Email Digest</a></li>
+            <li><a href="#distribution" data-nav="distribution">Distribution Lists</a></li>
+            <li><a href="#settings" data-nav="settings">Settings</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="app-main">
+      <div class="app-content" id="app-content">
+        <!-- SPA views are rendered here -->
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Initialising Pod Monitor...</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bmj-footer">
+      <div class="bmj-container">
+        <div class="bmj-footer-bottom">
+          <div class="bmj-footer-bottom-links">
+            <a href="https://www.bmj.com" target="_blank" rel="noopener">BMJ.com</a>
+            <a href="#settings">Settings</a>
+            <a href="https://github.com/bmj" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <div class="bmj-footer-copyright">
+            <p>Pod Monitor - Built by the BMJ AI Rapid Prototyping Team. For internal editorial use.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Toast notification container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Application JavaScript (ES Modules) -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

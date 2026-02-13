@@ -1,0 +1,99 @@
+[
+  {
+    "id": "ep_mm_001",
+    "podcast_id": "pod_medmyths",
+    "title": "Ivermectin in 2026: Why the Myth Persists",
+    "description": "Three years after the major trials reported, ivermectin for COVID remains a viral claim. We trace the information ecosystem keeping it alive.",
+    "published": "2026-02-11T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/mm001.mp3",
+    "duration_seconds": 1860,
+    "guid": "mm-ep-001",
+    "status": "summarized",
+    "scraped_at": "2026-02-11T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-11T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-11T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_medmyths/ep_mm_001.txt",
+    "transcript": "Despite the conclusive findings of the PRINCIPLE trial and the TOGETHER trial...",
+    "summary_key": "pod_medmyths/ep_mm_001.json",
+    "summary": {
+      "summary": "The episode investigates why ivermectin advocacy for COVID-19 persists despite definitive negative results from large randomised controlled trials (PRINCIPLE, TOGETHER, ACTIV-6). Misinformation researcher Dr Lydia Marchetti maps the network of substack authors, podcasters, and social media influencers who continue to promote the drug, often reframing the narrative as 'suppressed early treatment' rather than engaging with the evidence. Infectious disease specialist Professor Mark Hensley explains the methodological flaws in the small positive studies that circulate on social media, including confounding by concurrent corticosteroid use and publication bias. The episode draws parallels with historical medical misinformation patterns around laetrile and chelation therapy, suggesting that institutional distrust, not ignorance, drives uptake. Notable is a segment on how the 'ivermectin narrative' has evolved to incorporate broader anti-establishment health claims.",
+      "gist": "Ivermectin advocacy persists through networked misinformation and institutional distrust despite conclusive negative trial data.",
+      "themes": [
+        "Misinformation",
+        "Medical Research",
+        "Vaccine Debate",
+        "Public Health",
+        "Social Media & Health"
+      ],
+      "key_quotes": [
+        "The ivermectin story is no longer about ivermectin. It is about whether people trust the institutions that produce medical evidence. -- Dr Lydia Marchetti",
+        "Every small, flawed positive study gets amplified a thousandfold, while the large definitive trials are dismissed as pharma-captured. -- Prof. Mark Hensley"
+      ]
+    }
+  },
+  {
+    "id": "ep_mm_002",
+    "podcast_id": "pod_medmyths",
+    "title": "Seed Oils and the New Nutrition Panic",
+    "description": "Social media influencers claim seed oils are 'toxic'. We look at what the evidence actually says.",
+    "published": "2026-02-08T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/mm002.mp3",
+    "duration_seconds": 1680,
+    "guid": "mm-ep-002",
+    "status": "summarized",
+    "scraped_at": "2026-02-08T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-08T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-08T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_medmyths/ep_mm_002.txt",
+    "transcript": "The claim that vegetable seed oils are driving chronic disease has exploded on TikTok and X...",
+    "summary_key": "pod_medmyths/ep_mm_002.json",
+    "summary": {
+      "summary": "This episode examines the viral claim that seed oils (canola, sunflower, soybean) are a root cause of chronic disease. Nutritional epidemiologist Dr Hannah Wei reviews the evidence, noting that large meta-analyses consistently show that replacing saturated fat with polyunsaturated fat from seed oils reduces cardiovascular risk. The episode traces the claim's origins to a selective reading of linoleic acid research and the 'ancestral health' movement. Food scientist Dr Raj Patel explains oxidation chemistry and why the 'seed oils are toxic at any dose' claim misrepresents dose-response relationships. However, the episode acknowledges legitimate concerns about ultra-processed food formulations where seed oils are one component in a broader matrix of additives, and notes that the NOVA framework offers a more nuanced lens than demonising a single ingredient.",
+      "gist": "Viral anti-seed-oil claims misrepresent evidence; the real concern is ultra-processed food systems, not individual ingredients.",
+      "themes": [
+        "Misinformation",
+        "Nutrition",
+        "Public Health",
+        "Social Media & Health"
+      ],
+      "key_quotes": [
+        "The dose makes the poison. Seed oils at normal dietary levels are not only safe, they are actively protective against heart disease. -- Dr Hannah Wei",
+        "When someone tells you to avoid all seed oils, ask what they are selling. Usually it is butter or coconut oil at three times the price. -- Dr Raj Patel"
+      ]
+    }
+  },
+  {
+    "id": "ep_mm_003",
+    "podcast_id": "pod_medmyths",
+    "title": "Raw Milk Revival: Nostalgia vs Microbiology",
+    "description": "The raw milk movement is growing. We separate the pastoral marketing from the public health reality.",
+    "published": "2026-02-04T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/mm003.mp3",
+    "duration_seconds": 1920,
+    "guid": "mm-ep-003",
+    "status": "summarized",
+    "scraped_at": "2026-02-04T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-04T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-04T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_medmyths/ep_mm_003.txt",
+    "transcript": "Raw milk sales have doubled in the UK over the past two years...",
+    "summary_key": "pod_medmyths/ep_mm_003.json",
+    "summary": {
+      "summary": "The episode explores the resurgence of raw (unpasteurised) milk consumption, driven by social media claims about superior nutritional value and gut health benefits. Microbiologist Professor Elena Vasquez presents evidence that pasteurisation causes minimal nutrient loss while eliminating pathogens including E. coli O157, Listeria, and Campylobacter -- organisms that have caused documented outbreaks linked to raw milk. The programme examines the regulatory patchwork: raw milk sales are legal from farms in England and Wales but banned in Scotland. A raw milk advocate farmer argues for consumer choice, while a paediatric infectious disease consultant describes treating a child with haemolytic uraemic syndrome from contaminated raw milk. The episode concludes that while the microbiome argument is scientifically intriguing, current evidence does not support raw milk as a meaningful probiotic delivery vehicle compared to proven fermented foods.",
+      "gist": "Raw milk's claimed health benefits lack evidence while pasteurisation remains critical for preventing serious foodborne illness.",
+      "themes": [
+        "Misinformation",
+        "Public Health",
+        "Food Safety",
+        "Nutrition"
+      ],
+      "key_quotes": [
+        "Pasteurisation is one of the greatest public health interventions in history. Reversing it based on TikTok testimonials would be catastrophic. -- Prof. Elena Vasquez",
+        "The child I treated nearly died from kidney failure caused by E. coli in raw milk. That is not a matter of consumer choice. -- Dr Aisha Khan"
+      ]
+    }
+  }
+]

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "ep_gh_001",
+    "podcast_id": "pod_globalhealth",
+    "title": "WHO Pandemic Treaty: Where Negotiations Stand",
+    "description": "An insider's guide to the stalled pandemic treaty talks and what they mean for future outbreak response.",
+    "published": "2026-02-09T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/gh001.mp3",
+    "duration_seconds": 2400,
+    "guid": "gh-ep-001",
+    "status": "summarized",
+    "scraped_at": "2026-02-09T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-09T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-09T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_globalhealth/ep_gh_001.txt",
+    "transcript": "Negotiations on the WHO pandemic treaty entered their seventh round this week...",
+    "summary_key": "pod_globalhealth/ep_gh_001.json",
+    "summary": {
+      "summary": "The episode provides an inside account of WHO pandemic treaty negotiations, now in their seventh round. Key sticking points include pathogen access and benefit sharing (PABS), with low- and middle-income countries demanding guaranteed access to vaccines and therapeutics in exchange for sharing pathogen sequences. WHO legal adviser Dr Maria Santos-Oliveira explains why the US and EU are resisting binding manufacturing transfer obligations, while African Union health representative Dr Kwame Asante argues that without enforceable equity provisions, the treaty will repeat the 'vaccine apartheid' of COVID-19. The programme examines the proposed pandemic fund financing mechanism and reveals that several G7 nations have privately indicated they will sign a watered-down treaty rather than accept the PABS framework sought by the Africa Group and SEARO member states.",
+      "gist": "WHO pandemic treaty stalls on equity provisions as wealthy nations resist binding commitments to share vaccines and technology.",
+      "themes": [
+        "Global Health",
+        "Health Policy",
+        "Health Equity",
+        "Pandemic Preparedness"
+      ],
+      "key_quotes": [
+        "A pandemic treaty without enforceable equity provisions is a gentleman's agreement that will collapse at the first outbreak. -- Dr Kwame Asante",
+        "The political will that existed in 2021 has evaporated. We are now negotiating the minimum viable treaty. -- Dr Maria Santos-Oliveira"
+      ]
+    }
+  },
+  {
+    "id": "ep_gh_002",
+    "podcast_id": "pod_globalhealth",
+    "title": "Antimicrobial Resistance: The Silent Pandemic Progress Report",
+    "description": "A year after the UN High-Level Meeting on AMR, we assess what has actually changed.",
+    "published": "2026-02-05T12:29:39.173240+00:00",
+    "audio_url": "https://example.com/audio/gh002.mp3",
+    "duration_seconds": 2040,
+    "guid": "gh-ep-002",
+    "status": "summarized",
+    "scraped_at": "2026-02-05T12:29:39.173240+00:00",
+    "transcribed_at": "2026-02-05T16:29:39.173240+00:00",
+    "summarized_at": "2026-02-05T18:29:39.173240+00:00",
+    "audio_local_path": null,
+    "transcript_key": "pod_globalhealth/ep_gh_002.txt",
+    "transcript": "One year on from the UN High-Level Meeting on antimicrobial resistance...",
+    "summary_key": "pod_globalhealth/ep_gh_002.json",
+    "summary": {
+      "summary": "This episode assesses progress on antimicrobial resistance (AMR) one year after the UN High-Level Meeting pledged to reduce AMR deaths by 10% by 2030. Infectious disease epidemiologist Professor Chris Murray presents updated GRAM data showing drug-resistant infections now directly cause an estimated 1.4 million deaths annually, with sub-Saharan Africa and South Asia bearing the greatest burden. The episode examines why the antibiotic development pipeline remains critically thin -- only 13 new antibiotics are in Phase 3 trials, and most target gram-positive organisms, not the gram-negative pathogens causing the greatest mortality. Health economist Dr Priya Sharma explains how subscription-based 'Netflix models' for antibiotic procurement, pioneered by Sweden and the UK, could delink revenue from volume and incentivise development. The episode also covers the agricultural sector, where antibiotic use in livestock remains largely unregulated in many low-income countries.",
+      "gist": "AMR death toll continues to rise as the antibiotic pipeline stalls and agricultural overuse remains unregulated globally.",
+      "themes": [
+        "Global Health",
+        "Medical Research",
+        "Pharma Industry",
+        "Health Economics",
+        "Public Health"
+      ],
+      "key_quotes": [
+        "AMR is the slowest-moving pandemic in history, and we are responding with the urgency of a committee meeting. -- Prof. Chris Murray",
+        "The Netflix model works in theory, but we need 20 countries to adopt it, not two. -- Dr Priya Sharma"
+      ]
+    }
+  }
+]

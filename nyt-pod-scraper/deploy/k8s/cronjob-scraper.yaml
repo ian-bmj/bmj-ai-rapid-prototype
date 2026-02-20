@@ -1,0 +1,180 @@
+# =============================================================================
+# CronJob: Podcast Scraper
+# =============================================================================
+# Runs every 6 hours to check RSS feeds for new episodes, download audio,
+# transcribe, and summarise. Calls the API's /api/scrape-all endpoint.
+# =============================================================================
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pod-scraper
+  namespace: pod-monitor
+  labels:
+    app: pod-monitor
+    component: scraper
+spec:
+  schedule: "0 */6 * * *"    # Every 6 hours
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 1800   # 30 minute timeout
+      template:
+        metadata:
+          labels:
+            app: pod-monitor
+            component: scraper
+        spec:
+          serviceAccountName: pod-monitor-sa
+          restartPolicy: OnFailure
+          containers:
+            - name: scraper
+              image: ECR_IMAGE_PLACEHOLDER
+              command: ["python", "-c"]
+              args:
+                - |
+                  import requests, sys, os
+                  api_url = os.environ.get('API_URL', 'http://pod-monitor-api.pod-monitor.svc.cluster.local')
+                  print(f'Triggering scrape at {api_url}/api/scrape-all')
+                  resp = requests.post(f'{api_url}/api/scrape-all', timeout=600)
+                  print(f'Status: {resp.status_code}')
+                  print(resp.json())
+                  sys.exit(0 if resp.ok else 1)
+              envFrom:
+                - configMapRef:
+                    name: pod-monitor-config
+              env:
+                - name: API_URL
+                  value: "http://pod-monitor-api.pod-monitor.svc.cluster.local"
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+
+---
+# =============================================================================
+# CronJob: Daily Digest Email
+# =============================================================================
+# Runs daily at 08:00 UTC to generate and send the daily digest email.
+# =============================================================================
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pod-daily-digest
+  namespace: pod-monitor
+  labels:
+    app: pod-monitor
+    component: digest-daily
+spec:
+  schedule: "0 8 * * *"     # Daily at 8 AM UTC
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels:
+            app: pod-monitor
+            component: digest-daily
+        spec:
+          serviceAccountName: pod-monitor-sa
+          restartPolicy: OnFailure
+          containers:
+            - name: digest
+              image: ECR_IMAGE_PLACEHOLDER
+              command: ["python", "-c"]
+              args:
+                - |
+                  import requests, sys, os
+                  api_url = os.environ.get('API_URL', 'http://pod-monitor-api.pod-monitor.svc.cluster.local')
+                  print(f'Triggering daily digest at {api_url}/api/generate-digest')
+                  resp = requests.post(f'{api_url}/api/generate-digest',
+                      json={"digest_type": "daily"},
+                      timeout=300)
+                  print(f'Status: {resp.status_code}')
+                  print(resp.json())
+                  sys.exit(0 if resp.ok else 1)
+              envFrom:
+                - configMapRef:
+                    name: pod-monitor-config
+              env:
+                - name: API_URL
+                  value: "http://pod-monitor-api.pod-monitor.svc.cluster.local"
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+
+---
+# =============================================================================
+# CronJob: Weekly Digest Email
+# =============================================================================
+# Runs every Monday at 08:00 UTC for the weekly trend analysis digest.
+# =============================================================================
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pod-weekly-digest
+  namespace: pod-monitor
+  labels:
+    app: pod-monitor
+    component: digest-weekly
+spec:
+  schedule: "0 8 * * 1"     # Monday at 8 AM UTC
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels:
+            app: pod-monitor
+            component: digest-weekly
+        spec:
+          serviceAccountName: pod-monitor-sa
+          restartPolicy: OnFailure
+          containers:
+            - name: digest
+              image: ECR_IMAGE_PLACEHOLDER
+              command: ["python", "-c"]
+              args:
+                - |
+                  import requests, sys, os
+                  api_url = os.environ.get('API_URL', 'http://pod-monitor-api.pod-monitor.svc.cluster.local')
+                  print(f'Triggering weekly digest at {api_url}/api/generate-digest')
+                  resp = requests.post(f'{api_url}/api/generate-digest',
+                      json={"digest_type": "weekly"},
+                      timeout=300)
+                  print(f'Status: {resp.status_code}')
+                  print(resp.json())
+                  sys.exit(0 if resp.ok else 1)
+              envFrom:
+                - configMapRef:
+                    name: pod-monitor-config
+              env:
+                - name: API_URL
+                  value: "http://pod-monitor-api.pod-monitor.svc.cluster.local"
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi

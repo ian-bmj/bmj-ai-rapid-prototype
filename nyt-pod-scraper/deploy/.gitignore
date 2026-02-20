@@ -1,0 +1,13 @@
+# Credentials - NEVER commit these
+iam-credentials/
+*.env
+
+# Terraform state
+terraform-outputs.json
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+
+# Docker build artifacts
+docker/.dockerignore

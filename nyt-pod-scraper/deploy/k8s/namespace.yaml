@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pod-monitor
+  labels:
+    app: pod-monitor
+    managed-by: deploy-scripts

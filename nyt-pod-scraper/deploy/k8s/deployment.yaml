@@ -1,0 +1,81 @@
+# =============================================================================
+# Pod Monitor API - Kubernetes Deployment
+# =============================================================================
+# Runs the Flask API server that serves the admin SPA and REST API.
+# Uses IRSA for AWS service access (S3, DynamoDB, SES, Bedrock).
+# =============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-monitor-api
+  namespace: pod-monitor
+  labels:
+    app: pod-monitor
+    component: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pod-monitor
+      component: api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: pod-monitor
+        component: api
+    spec:
+      serviceAccountName: pod-monitor-sa
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: api
+          image: ECR_IMAGE_PLACEHOLDER
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5001
+              protocol: TCP
+              name: http
+          envFrom:
+            - configMapRef:
+                name: pod-monitor-config
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 5001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5001
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: pod-monitor
+              component: api

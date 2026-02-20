@@ -1,0 +1,21 @@
+# Application configuration injected as environment variables
+# Values are replaced by 04-deploy-k8s.sh from Terraform outputs
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pod-monitor-config
+  namespace: pod-monitor
+  labels:
+    app: pod-monitor
+data:
+  AWS_REGION: "eu-west-2"
+  FLASK_PORT: "5001"
+  S3_AUDIO_BUCKET: "S3_AUDIO_BUCKET_PLACEHOLDER"
+  S3_DATA_BUCKET: "S3_DATA_BUCKET_PLACEHOLDER"
+  DYNAMODB_PODCASTS_TABLE: "DYNAMODB_PODCASTS_PLACEHOLDER"
+  DYNAMODB_EPISODES_TABLE: "DYNAMODB_EPISODES_PLACEHOLDER"
+  SES_SENDER_EMAIL: "SES_SENDER_PLACEHOLDER"
+  BEDROCK_MODEL_ID: "anthropic.claude-3-5-sonnet-20241022-v2:0"
+  COGNITO_USER_POOL_ID: "COGNITO_POOL_PLACEHOLDER"
+  COGNITO_APP_CLIENT_ID: "COGNITO_CLIENT_PLACEHOLDER"
+  LOG_LEVEL: "INFO"

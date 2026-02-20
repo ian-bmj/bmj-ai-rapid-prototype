@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: editor-prompt-tool
+  namespace: argocd
+spec:
+  destination:
+    namespace: editor-prompt
+    server: https://kubernetes.default.svc
+  project: editor-prompt
+  source:
+    path: editor-prompt-tool/overlays/dev
+    repoURL: https://github.com/BMJ-Ltd/editor-prompt-tool_eks
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}

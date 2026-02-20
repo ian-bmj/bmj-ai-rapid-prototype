@@ -1,0 +1,11 @@
+
+source:
+  kind: Service
+  name: editor-prompt-tool
+  fieldPath: metadata.annotations.[external-dns.alpha.kubernetes.io/hostname]
+targets:
+  - select:
+      kind: Ingress
+      name: editor-prompt-tool
+    fieldPaths:
+      - spec.rules.0.host

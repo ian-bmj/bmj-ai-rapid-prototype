@@ -1,0 +1,10 @@
+source:
+  kind: Job
+  name: editor-prompt-job
+  fieldPath: spec.template.spec.containers.annotations.[external-dns.alpha.kubernetes.io/hostname]
+targets:
+  - select:
+      kind: Ingress
+      name: editor-prompt-tool
+    fieldPaths:
+      - spec.rules.0.host

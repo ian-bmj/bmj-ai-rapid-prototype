@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# namespace: nextjs
+
+resources:
+- ../../base
+- sealed-secrets.yaml
+
+# - path: args.yaml
+patches:
+- path: ingress-patch.yaml
+- path: env.yaml
+- path: service-patch.yaml
+  target:
+    kind: Service
+    name: editor-prompt-tool
+    version: v1
+- path: ingress-vars.yaml
+  target:
+    group: networking.k8s.io
+    kind: Ingress
+    name: editor-prompt-tool
+    version: v1
+- path: serviceaccount-patch.yaml
+  target:
+    kind: ServiceAccount
+    name: editor-prompt-tool
+    version: v1
+
+replacements:
+- path: replacement.yaml
+
+images:
+- name: 385562404581.dkr.ecr.eu-west-1.amazonaws.com/editor-prompt-tool
+  newTag: "1.14"
+
+replicas:
+- count: 1
+  name: editor-prompt-tool

@@ -1,0 +1,5 @@
+- op: add
+  path: /metadata/annotations/external-dns.alpha.kubernetes.io~1hostname
+  value: editor-prompt-tool.editor-prompt.live.eks.bmjgroup.com
+
+# https://jsonpatch.com/

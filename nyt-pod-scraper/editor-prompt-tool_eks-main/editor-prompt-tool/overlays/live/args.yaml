@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # namespace: nextjs
+  name: editor-prompt-tool
+spec:
+  template:
+    spec:
+      containers:
+        - name: editor-prompt-tool
+          args: 
+            - gunicorn --workers 4 --bind 0.0.0.0:5000 --timeout 120 wsgi:app

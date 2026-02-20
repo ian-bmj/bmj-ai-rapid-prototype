@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: editor-prompt-tool-db-migrate
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      containers:
+        - name: migrate
+          image: "385562404581.dkr.ecr.eu-west-1.amazonaws.com/editor-prompt-tool:xxxxxx"  # Replace with your tag
+          command: ["/bin/sh", "-c", "./scripts/job-entrypoint.sh"]  # Or any custom migration command
+          env:
+            - name: DATABASE_URL #postgresql://username:password@your-rds-endpoint.amazonaws.com:5432/bmj_prompt_tool
+              valueFrom:
+                secretKeyRef:
+                  name: editor-prompt-tool
+                  key: DATABASE_URL
+      restartPolicy: Never
+      ttlSecondsAfterFinished: 36000

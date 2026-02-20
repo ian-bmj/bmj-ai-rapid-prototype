@@ -1,0 +1,21 @@
+accountid   = "109227185188"
+platform    = "aws"
+product     = "editor-prompt"
+project     = "editor-prompt-tool"
+stack       = "dev"
+env         = "dev"
+scope       = "editor-prompt"
+dns_zone_id = "Z0102086SQOOVFD0C7DE"
+costcentre  = "bestpractice"
+creator     = "terraform"
+region      = "eu-west-1"
+cyclestate  = "11 24"
+
+vpc_id                  = "vpc-d9cc0bbd"
+rds_subnet_ids          = ["subnet-c408e99e", "subnet-4205b10a", "subnet-5b85233d"]
+rds_instance_class      = "db.t3.small"
+rds_multi_az            = false
+sqs_max_receive_count   = 2
+rds_allocated_storage   = 25
+rds_domain_prefix       = "editor-prompt"
+backup_retention_period = 7

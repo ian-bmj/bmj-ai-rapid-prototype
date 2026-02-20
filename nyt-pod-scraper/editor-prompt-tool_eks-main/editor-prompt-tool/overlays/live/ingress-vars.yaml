@@ -1,0 +1,22 @@
+- op: add  #action 
+  path: /metadata/annotations/alb.ingress.kubernetes.io~1certificate-arn #resource we want to change
+  value: arn:aws:acm:eu-west-1:721468132385:certificate/12bb8724-c56a-4e09-b60d-1a71b916a176 #new value we want to patch to 
+
+- op: add
+  path: /metadata/annotations/alb.ingress.kubernetes.io~1inbound-cidrs
+  value: 0.0.0.0/0
+
+- op: add
+  path: /metadata/annotations/alb.ingress.kubernetes.io~1ssl-policy
+  value: ELBSecurityPolicy-TLS13-1-2-2021-06
+
+- op: add
+  path: /metadata/annotations/alb.ingress.kubernetes.io~1scheme
+  value: internet-facing
+
+- op: add
+  path: /spec/rules/0/host
+  value: editor-prompt-tool.editor-prompt.live.eks.bmjgroup.com
+
+
+# https://jsonpatch.com/

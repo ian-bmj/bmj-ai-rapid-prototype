@@ -1,0 +1,15 @@
+accountid   = "721468132385"
+platform    = "aws"
+product     = "editor-prompt"
+project     = "editor-prompt-tool"
+stack       = "live"
+env         = "live"
+dns_zone_id = "Z01472103KONH2B58TFL5"
+costcentre  = "bestpractice"
+creator     = "terraform"
+
+# Configuration for learning wild card certificate
+namespace            = "editor-prompt"
+domain_name_suffix   = "eks.bmjgroup.com"
+zone_name_suffix     = "eks.bmjgroup.com"
+eks_oidc_provider_id = "6F626B45B68C76E63C65AF8C9EA11847"

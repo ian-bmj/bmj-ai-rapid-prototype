@@ -1,0 +1,9 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: editor-prompt-tool-instrumentation
+spec:
+  exporter:
+    endpoint: http://collector-xray-collector.opentelemetry:4317
+  python:
+    image: public.ecr.aws/aws-observability/adot-autoinstrumentation-python:v0.9.0  

@@ -1,0 +1,41 @@
+name: Build live infrastructure
+on:
+  release:
+    types:
+      - "released"
+
+  workflow_dispatch:
+
+env:
+  SERVICES: >-
+    {
+      "terraform/common": ["live"],
+      "terraform/rds": ["live"]
+    }
+
+jobs:
+  generate-matrix:
+    runs-on: self-hosted
+    outputs:
+      TERRAFORM_DIRS: ${{ steps.changed-dirs.outputs.TERRAFORM_DIRS }}
+    steps:
+      - name: Changed services
+        id: changed-dirs
+        uses: BMJ-Ltd/github-actions-terraform/.github/actions/changed-service@main
+        with:
+          services: ${{ env.SERVICES }}
+
+      - run: echo ${{ steps.changed-dirs.outputs.TERRAFORM_DIRS }}
+
+  plan-infrastructure:
+    needs: generate-matrix
+    if: needs.generate-matrix.outputs.TERRAFORM_DIRS != '{"include":[]}'
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.TERRAFORM_DIRS) }}
+    uses: BMJ-Ltd/github-actions-terraform/.github/workflows/build-infrastructure.yaml@main
+    with:
+      ENV: ${{ matrix.env }}
+      TERRAFORM_DIR: ${{ matrix.terraform_dir }}
+      # KUBERNETES_REQUIRED: true
+    secrets: inherit

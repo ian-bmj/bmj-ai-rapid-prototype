@@ -1,0 +1,21 @@
+- op: add  #action 
+  path: /metadata/annotations/alb.ingress.kubernetes.io~1certificate-arn #resource we want to change
+  value: arn:aws:acm:eu-west-1:109227185188:certificate/3e17bde9-04aa-4875-aa7a-310d81523553
+  
+- op: add
+  path: /metadata/annotations/alb.ingress.kubernetes.io~1ssl-policy
+  value: ELBSecurityPolicy-TLS13-1-2-2021-06
+  
+- op: add
+  path: /metadata/annotations/alb.ingress.kubernetes.io~1inbound-cidrs
+  value: 172.26.0.0/16,172.31.0.0/16
+
+- op: add
+  path: /spec/rules/0/host
+  value: editor-prompt-tool.editor-prompt.dev.eks.bmjgroup.com
+
+# - op: add
+#   path: /spec/rules/1/host
+#   value: editor-prompt-tool-2.nextjs.dev.eks.bmjgroup.com
+
+# https://jsonpatch.com/

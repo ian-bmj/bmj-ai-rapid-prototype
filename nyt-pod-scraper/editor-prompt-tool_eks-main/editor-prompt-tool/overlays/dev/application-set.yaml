@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name:  editor-prompt-tool-preview
+  namespace: argocd
+spec:
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: BMJ-Ltd
+        # The Github repository
+        repo: editor-prompt-tool
+        appSecretName: creds-2590638493 # the name of the secret created in the Argo NS when we created the GitHub App
+        labels:
+        - preview
+      requeueAfterSeconds: 180
+  template:
+    metadata:
+      name: 'editor-prompt-tool-{{branch}}-{{number}}'
+      # namespace: argocd
+    spec:
+      source:
+        repoURL: 'https://github.com/BMJ-Ltd/editor-prompt-tool_eks'
+        # targetRevision: '{{head_sha}}' # doesn't work/bug when using a two different repos above
+        targetRevision: HEAD
+        path: editor-prompt-tool/overlays/dev
+        kustomize:
+          # nameSuffix: {{branch}}
+          commonLabels:
+            app.kubernetes.io/name: 'editor-prompt-tool-{{branch}}-{{number}}'
+            app.kubernetes.io/instance: 'editor-prompt-tool-{{branch}}-{{number}}'
+            app: 'editor-prompt-tool-{{branch}}-{{number}}'
+          images:
+          #- 385562404581.dkr.ecr.eu-west-1.amazonaws.com/editor-prompt-tool:pr_nextjs-docker-{{branch}}_{{head_sha}}
+          - 385562404581.dkr.ecr.eu-west-1.amazonaws.com/editor-prompt-tool:pr_editor-prompt-tool-{{branch}}_{{head_short_sha_7}}
+          commonAnnotations:
+            external-dns.alpha.kubernetes.io/hostname: editor-prompt-tool-{{branch}}-{{number}}.editor-prompt.dev.eks.bmjgroup.com
+            spec.rules.0.host: editor-prompt-tool-{{branch}}-{{number}}.editor-prompt.dev.eks.bmjgroup.com
+      project: "default"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: editor-prompt-tool-{{branch}}-{{number}}

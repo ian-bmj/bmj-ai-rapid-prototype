@@ -1,0 +1,54 @@
+[
+  {
+    "id": "pod_healthwatch",
+    "name": "HealthWatch Weekly",
+    "feed_url": "https://feeds.example.com/healthwatch",
+    "category": "Health Policy",
+    "active": true,
+    "added_at": "2026-01-14T12:29:39.173240+00:00",
+    "last_scraped": "2026-02-13T06:29:39.173240+00:00",
+    "episode_count": 3,
+    "feed_title": "HealthWatch Weekly",
+    "feed_description": "In-depth analysis of UK and global health policy, NHS reform, and public health challenges from leading health journalists.",
+    "feed_image": null
+  },
+  {
+    "id": "pod_medmyths",
+    "name": "Medical Myths Debunked",
+    "feed_url": "https://feeds.example.com/medmyths",
+    "category": "Medical Science",
+    "active": true,
+    "added_at": "2026-01-16T12:29:39.173240+00:00",
+    "last_scraped": "2026-02-13T04:29:39.173240+00:00",
+    "episode_count": 3,
+    "feed_title": "Medical Myths Debunked",
+    "feed_description": "Scientists and clinicians tackle health misinformation, viral claims, and contested medical evidence head-on.",
+    "feed_image": null
+  },
+  {
+    "id": "pod_westminster",
+    "name": "Westminster Health Briefing",
+    "feed_url": "https://feeds.example.com/westminster-health",
+    "category": "Politics & Health",
+    "active": true,
+    "added_at": "2026-01-19T12:29:39.173240+00:00",
+    "last_scraped": "2026-02-13T09:29:39.173240+00:00",
+    "episode_count": 2,
+    "feed_title": "Westminster Health Briefing",
+    "feed_description": "Political correspondents decode how government policy, parliamentary debates, and party politics shape the UK health landscape.",
+    "feed_image": null
+  },
+  {
+    "id": "pod_globalhealth",
+    "name": "Global Health Dispatch",
+    "feed_url": "https://feeds.example.com/global-health",
+    "category": "Global Health",
+    "active": false,
+    "added_at": "2026-01-24T12:29:39.173240+00:00",
+    "last_scraped": "2026-02-10T12:29:39.173240+00:00",
+    "episode_count": 2,
+    "feed_title": "Global Health Dispatch",
+    "feed_description": "WHO correspondents and field epidemiologists report on pandemics, health equity, and international health governance.",
+    "feed_image": null
+  }
+]

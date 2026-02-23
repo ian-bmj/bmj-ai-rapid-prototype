@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pod-monitor-config
+  namespace: pod-monitor
+data:
+  AWS_REGION: "eu-west-2"
+  ENVIRONMENT: "live"
+  FLASK_PORT: "5001"
+  FLASK_DEBUG: "0"
+  AUDIO_BUCKET: "pod-monitor-audio-live"
+  DATA_BUCKET: "pod-monitor-data-live"
+  PODCASTS_TABLE: "pod-monitor-live-podcasts"
+  EPISODES_TABLE: "pod-monitor-live-episodes"
+  DISTRIBUTION_TABLE: "pod-monitor-live-distribution-lists"
+  BEDROCK_MODEL_ID: "anthropic.claude-3-5-sonnet-20241022-v2:0"
+  SENDER_EMAIL: "pod-monitor@bmj.com"

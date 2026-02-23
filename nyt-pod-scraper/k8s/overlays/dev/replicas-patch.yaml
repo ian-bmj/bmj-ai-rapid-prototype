@@ -1,0 +1,8 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-monitor
+  namespace: pod-monitor
+spec:
+  replicas: 2

@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  app.kubernetes.io/name: pod-monitor
+  app: pod-monitor
+  team: bmj-ai
+  CostCentre: bmj-ai
+  project: pod-monitor
+  product: pod-monitor
+  app.kubernetes.io/managed-by: kustomize
+
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - serviceaccount.yaml
+  - service.yaml
+  - ingress.yaml
+  - configmap.yaml
+  - cronjob-scraper.yaml
+  - hpa.yaml

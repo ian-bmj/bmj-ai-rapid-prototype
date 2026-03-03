@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMJ Article Fit - Agent Prompting Overview</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --ink: #17324d;
+            --paper: #f7fbff;
+            --paper-deep: #e8f1fb;
+            --accent: #005eb8;
+            --accent-soft: #4f8fd3;
+            --teal: #0f4c81;
+            --olive: #35627a;
+            --wine: #24466a;
+            --line: rgba(23, 50, 77, 0.12);
+            --shadow: 0 18px 60px rgba(9, 35, 64, 0.16);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(0, 94, 184, 0.16), transparent 28%),
+                radial-gradient(circle at top right, rgba(79, 143, 211, 0.18), transparent 30%),
+                linear-gradient(135deg, #f8fbff 0%, #edf4fb 48%, #e5eef9 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .deck {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grain {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
+            opacity: 0.25;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            padding: 40px 50px 65px;
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-shell {
+            flex: 1;
+            background: rgba(247, 251, 255, 0.88);
+            border: 1px solid rgba(28, 35, 49, 0.09);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            padding: 28px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow-y: auto;
+        }
+
+        .title-slide .slide-shell {
+            justify-content: center;
+            align-items: flex-start;
+            background:
+                linear-gradient(140deg, rgba(255,255,255,0.82), rgba(243,248,255,0.94)),
+                radial-gradient(circle at right bottom, rgba(0, 94, 184, 0.15), transparent 35%);
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--teal);
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        h1 {
+            font-size: clamp(2.4rem, 4vw, 4.2rem);
+            max-width: 920px;
+        }
+
+        h2 {
+            font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+            color: var(--accent);
+        }
+
+        h3 {
+            font-size: 1rem;
+            color: var(--teal);
+            margin-bottom: 4px;
+        }
+
+        p, li, td, th {
+            font-size: 0.95rem;
+            line-height: 1.45;
+        }
+
+        .lead {
+            font-size: 1.15rem;
+            max-width: 880px;
+            color: rgba(28, 35, 49, 0.9);
+        }
+
+        .meta {
+            font-size: 0.88rem;
+            color: rgba(28, 35, 49, 0.72);
+        }
+
+        .two-col,
+        .three-col {
+            display: grid;
+            gap: 14px;
+            flex: 1;
+        }
+
+        .two-col {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 14px 16px;
+        }
+
+        .card ul {
+            margin-left: 16px;
+            display: grid;
+            gap: 5px;
+        }
+
+        .pill-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.72);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .pill.accent { color: var(--accent); }
+        .pill.teal { color: var(--teal); }
+        .pill.olive { color: var(--olive); }
+        .pill.wine { color: var(--wine); }
+
+        .workflow-diagram {
+            background: rgba(10, 52, 95, 0.96);
+            color: #eef7ff;
+            border-radius: 16px;
+            padding: 20px 24px;
+            font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            white-space: pre;
+        }
+
+        .code-block {
+            background: #103a63;
+            color: #f5fbff;
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+            font-size: 0.82rem;
+            line-height: 1.45;
+            overflow-x: auto;
+        }
+
+        .snippet-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .snippet {
+            background: rgba(10, 52, 95, 0.96);
+            color: #eef7ff;
+            border-radius: 14px;
+            padding: 12px 14px;
+            border-top: 3px solid var(--accent-soft);
+        }
+
+        .snippet h3 {
+            color: #cfe7ff;
+            margin-bottom: 8px;
+        }
+
+        .snippet pre {
+            white-space: pre-wrap;
+            font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+            font-size: 0.78rem;
+            line-height: 1.4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.55);
+            border-radius: 16px;
+            overflow: hidden;
+            font-size: 0.88rem;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(0, 94, 184, 0.08);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .quote {
+            border-left: 4px solid var(--accent-soft);
+            padding: 16px 20px;
+            color: rgba(28, 35, 49, 0.88);
+            background: rgba(0, 94, 184, 0.06);
+            border-radius: 0 12px 12px 0;
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+
+        .quote.large {
+            font-size: 1.4rem;
+            padding: 24px 28px;
+        }
+
+        .footer {
+            position: absolute;
+            left: 50px;
+            right: 50px;
+            bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: rgba(28, 35, 49, 0.72);
+        }
+
+        .progress {
+            width: 200px;
+            height: 6px;
+            background: rgba(28, 35, 49, 0.12);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), var(--teal));
+            border-radius: 999px;
+            transition: width 0.2s ease;
+        }
+
+        .nav-note {
+            font-size: 0.82rem;
+        }
+
+        .highlight-box {
+            background: rgba(0, 94, 184, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 12px 16px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .example-box {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .example-box h4 {
+            font-size: 0.85rem;
+            color: var(--teal);
+            margin-bottom: 6px;
+        }
+
+        @media (max-width: 1100px) {
+            body {
+                overflow: auto;
+            }
+
+            .deck {
+                height: auto;
+            }
+
+            .slide {
+                position: relative;
+                display: flex;
+                min-height: 100vh;
+                padding: 22px 16px 55px;
+            }
+
+            .slide:not(.active) {
+                display: none;
+            }
+
+            .slide-shell {
+                padding: 20px 18px;
+            }
+
+            .two-col,
+            .three-col,
+            .snippet-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer {
+                left: 16px;
+                right: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="deck">
+        <div class="grain"></div>
+
+        <!-- SLIDE 1: Title -->
+        <section class="slide title-slide active">
+            <div class="slide-shell">
+                <div class="eyebrow">BMJ Article Fit</div>
+                <h1>How the editorial agents are prompted, grounded, and constrained</h1>
+                <p class="lead">
+                    A walkthrough of the prompting strategies and resource packs used across
+                    <code>backend/agents/</code>, designed to help editors understand what the agents are really leaning on.
+                </p>
+                <div class="pill-row">
+                    <span class="pill accent">Prompt decomposition</span>
+                    <span class="pill teal">Local guidance packs</span>
+                    <span class="pill olive">Search and retrieval tools</span>
+                    <span class="pill wine">Structured editorial outputs</span>
+                </div>
+                <p class="meta">Prepared from the current repository structure in <code>backend/agents</code>.</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: Why Editors Should Care -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Why Editors Should Care</div>
+                <h2>These agents are not one generic reviewer</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>What the system is doing</h3>
+                        <ul>
+                            <li>Breaking screening into narrower editorial questions: scope, novelty, ethics, integrity, reporting, statistical verification</li>
+                            <li>Giving each sub-question a different prompt, tool set, and evidence base</li>
+                            <li>Forcing agents to return structured fields rather than free-form opinions</li>
+                            <li>Passing outputs forward so later agents synthesize prior assessments</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>What editorial feedback can improve</h3>
+                        <ul>
+                            <li>Whether the right evidence sources are treated as authoritative</li>
+                            <li>Whether decision thresholds match real editorial practice</li>
+                            <li>Whether prompts over-weight reporting versus scientific merit</li>
+                            <li>Where transfer/reject logic needs tighter policy language</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quote large">
+                    The key question is not "Is the model smart?" It is "Which instructions and which evidence sources are steering each editorial judgment?"
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: Workflow Map - Visual -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Workflow Map</div>
+                <h2>Agent topology: how the pieces fit together</h2>
+                <div class="workflow-diagram">
+Phase 1: PARALLEL GATEKEEPERS                 Phase 2: GATED DECISION
+----------------------------------------      -----------------------
+     +------------+                                  +----------+
+  +->| Scoping    |--+                          +--->| Pass?    |--NO--> STOP
+  |  +------------+  |                          |    +----+-----+
+--+                  +---> Gatekeeper Decision--+         |
+  |  +------------+  |                                   YES
+  +->| Ethics     |--+                                    |
+     +------------+                                       V
+
+Phase 3: PARALLEL ANALYSIS                     Phase 4-5: SYNTHESIS
+------------------------                       ----------------------
+     +------------+
+  +->| Novelty    |--+
+  |  +------------+  |
+  |  +------------+  |                            +------------+     +--------+
+--+->| Integrity  |--+--------------------------->| Synthesizer|---->| Writer |
+  |  +------------+  |                            +------------+     +--------+
+  |  +------------+  +------------+
+  +->| Meth.Report|->|Meth.Valid. |
+     +------------+  +------------+
+       (sequential sub-chain)
+                </div>
+                <div class="two-col" style="margin-top: 12px;">
+                    <div class="highlight-box">
+                        <strong>Configurable wiring:</strong> The workflow topology is defined in Step Functions. We control which agents run, in what order, and what gates apply.
+                    </div>
+                    <div class="highlight-box">
+                        <strong>Use what you need:</strong> Each agent works independently. You can use just the agents relevant to your editorial questions without running the full pipeline.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: Prompting Pattern 1 - Role Specialization -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Prompting Pattern 1</div>
+                <h2>Role-specialized prompts</h2>
+                <p class="lead">Every agent is cast as a specific reviewer type with a clear mission. This focuses the model on one editorial question at a time.</p>
+                <div class="snippet-grid">
+                    <div class="snippet">
+                        <h3>Scoping Agent</h3>
+                        <pre>You are a Scoping Specialist for {journal_name}.
+
+Your task: Evaluate if a manuscript fits
+{journal_name} based on BOTH topic relevance
+AND study type.</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Ethics Agent</h3>
+                        <pre>You are an expert ethics compliance reviewer
+for medical research manuscripts.</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Novelty Agent</h3>
+                        <pre>You are an editorial screening specialist
+for BMJ journals. Your role is to evaluate
+manuscript novelty, originality, and importance
+by searching literature.</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Integrity Agent</h3>
+                        <pre>You are an expert editorial assistant
+specializing in author integrity verification
+for medical journal submissions.</pre>
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 12px;">
+                    <strong>Why this matters:</strong> A scoping specialist won't wander into ethics commentary. An integrity checker won't re-evaluate novelty. Each agent stays in its lane.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: Prompting Pattern 2 - Retrieval Before Judgment -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Prompting Pattern 2</div>
+                <h2>Retrieval before judgment</h2>
+                <p class="lead">Prompts explicitly name files, URLs, or search tools to consult before making decisions. The model gathers evidence first.</p>
+                <div class="snippet-grid">
+                    <div class="snippet">
+                        <h3>Scoping: Read local files</h3>
+                        <pre>Use file_read to access:
+- journal_scopes/{journal}/scope_summary.txt
+- journal_scopes/{journal}/article_types.txt</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Ethics: Crawl policy URLs</h3>
+                        <pre>For EACH URL:
+1. First try get_url_content(url)
+2. If empty, fallback to web_extract
+3. Extract ALL requirements, checklists,
+   and criteria from retrieved content</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Novelty: Search literature</h3>
+                        <pre>Search literature using:
+- OpenAlex for academic publications
+- PubMed for biomedical literature
+- Google Scholar and web sources
+- Extract content from relevant papers</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Integrity: Check author databases</h3>
+                        <pre>Use MCP tools to gather information:
+- search_pubpeer: Post-publication concerns
+- validate_orcid: Author profiles
+- search_openalex: Metrics and H-index
+- search_pubmed: Publications</pre>
+                    </div>
+                </div>
+                <p style="margin-top: 8px; font-size: 0.9rem; color: rgba(28,35,49,0.75);">Each agent has access to different evidence sources suited to its question.</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: Prompting Pattern 3 - Structured Outputs -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Prompting Pattern 3</div>
+                <h2>Structured outputs</h2>
+                <p class="lead">Agents emit structured decisions (Pydantic models) instead of free-form prose. This keeps downstream synthesis predictable.</p>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Scoping output structure</h3>
+                        <div class="code-block">
+Provide:
+- topic_fits_journal: Yes/No/Uncertain
+- study_type_fits_journal: Yes/No/Uncertain
+- decision: Keep/Transfer/Reject/Further Investigation
+- reasoning: Explain both assessments
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Novelty output structure</h3>
+                        <div class="code-block">
+Provide:
+1. Literature volume summary
+2. Key competing works (3-5 papers)
+3. Novelty assessment: Level + evidence
+4. Importance assessment
+5. Rationale quality
+6. Decision: Proceed/Revise/Reject
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 12px;">
+                    <strong>Why structured outputs matter:</strong> The synthesizer can programmatically combine decisions from 6+ agents. Free-form text would require re-interpretation.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7: Prompting Pattern 4 - Examples -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Prompting Pattern 4</div>
+                <h2>Learning from examples</h2>
+                <p class="lead">Some agents include real examples of past decisions to calibrate their judgments. This helps the model understand what "Transfer" or "Reject" really means.</p>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>How it works</h3>
+                        <p>The scoping and novelty agents can load examples from JSON files:</p>
+                        <div class="code-block" style="margin-top: 8px;">
+few_shot_examples.json contains real manuscripts with:
+- title and abstract
+- decision made (Keep/Transfer/Reject)
+- reasoning provided
+- transfer target if applicable
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.88rem;">These examples are appended to the prompt with: <em>"Here are examples of previous evaluations to guide your assessments."</em></p>
+                    </div>
+                    <div class="example-box" style="align-self: start;">
+                        <h4>Example entry (scoping)</h4>
+                        <div class="code-block" style="font-size: 0.75rem;">
+{
+  "title": "Effect of Mental Health Laws on ED Stay",
+  "decision": {
+    "topic_fits_emj": "No",
+    "study_type_fits_emj": "Uncertain",
+    "decision": "Transfer",
+    "reasoning": "Primary focus is mental health
+      policy, not emergency medicine processes."
+  },
+  "transfer": {
+    "target_journal": "mentalhealth",
+    "reasoning": "BMJ Mental Health covers
+      psychiatric research and policy."
+  }
+}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 8: Prompting Pattern 5 - Tool Constraints -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Prompting Pattern 5</div>
+                <h2>Tool-constrained reasoning</h2>
+                <p class="lead">The important distinction is not only the prompt text. It is prompt + tool access. Different agents get different capabilities.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent</th>
+                            <th>Tools available</th>
+                            <th>What this enables</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Scoping</td>
+                            <td><code>file_read</code></td>
+                            <td>Read local journal scope files</td>
+                        </tr>
+                        <tr>
+                            <td>Novelty</td>
+                            <td>MCP search tools (OpenAlex, PubMed, Google Scholar, web)</td>
+                            <td>Live literature search and paper extraction</td>
+                        </tr>
+                        <tr>
+                            <td>Ethics</td>
+                            <td><code>get_url_content</code>, <code>web_extract</code>, <code>file_read</code></td>
+                            <td>Retrieve policy documents, read local guidelines</td>
+                        </tr>
+                        <tr>
+                            <td>Integrity</td>
+                            <td>MCP tools (PubPeer, ORCID, OpenAlex, PubMed, Scholar)</td>
+                            <td>Author verification across multiple databases</td>
+                        </tr>
+                        <tr>
+                            <td>Methodology</td>
+                            <td><code>file_read</code>, <code>web_search</code>, <code>web_extract</code></td>
+                            <td>Read EQUATOR checklists, search for guidelines</td>
+                        </tr>
+                        <tr>
+                            <td>Validation</td>
+                            <td>Python executor (<code>scipy</code>, <code>numpy</code>, <code>pandas</code>)</td>
+                            <td>Execute statistical verification code</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SLIDE 9: Scoping Agent Deep Dive -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Scoping Agent</div>
+                <h2>Journal fit uses local scope packs</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>How the agent reads journal scope</h3>
+                        <p>The scoping agent uses <code>file_read</code> to access journal-specific files stored locally:</p>
+                        <ul style="margin-top: 8px;">
+                            <li><code>journal_scopes/{journal}/scope_summary.txt</code> - What topics the journal covers</li>
+                            <li><code>journal_scopes/{journal}/article_types.txt</code> - What study types are accepted</li>
+                        </ul>
+                        <p style="margin-top: 8px;">The <code>{journal}</code> placeholder is replaced at runtime (e.g., "emj" becomes "Emergency Medicine Journal").</p>
+                    </div>
+                    <div class="card">
+                        <h3>Decision criteria from the prompt</h3>
+                        <div class="code-block">
+## Decision Rules
+
+Keep for {journal_name}:
+  Both topic AND study type fit
+
+Transfer:
+  Topic fits another BMJ journal OR
+  study type fits another journal better
+
+Reject:
+  Not related to human/population health
+  outcomes (fundamental flaw)
+
+Further Investigation:
+  Unclear if any BMJ journal is suitable
+                        </div>
+                    </div>
+                </div>
+                <div class="snippet" style="margin-top: 12px;">
+                    <h3>Full scoping prompt excerpt</h3>
+                    <pre>You are a Scoping Specialist for {journal_name}.
+
+Your task: Evaluate if a manuscript fits {journal_name} based on BOTH topic relevance AND study type.
+
+## Available Tools
+Use file_read to access:
+- journal_scopes/{journal}/scope_summary.txt ({journal_name} topic scope)
+- journal_scopes/{journal}/article_types.txt ({journal_name} accepted study types)
+
+## Evaluation Criteria
+
+### 1. Topic Fit (topic_fits_journal)
+Read the scope_summary.txt file to understand what topics {journal_name} covers.
+- Yes: Primary focus aligns with {journal_name}'s scope
+- No: Primary focus belongs to a different specialty
+- Uncertain: Mixed focus or unclear from abstract</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: Novelty Agent Deep Dive -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Novelty Agent</div>
+                <h2>Novelty uses live literature search</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>The four editorial questions</h3>
+                        <p>The novelty prompt frames specific questions editors need answered:</p>
+                        <div class="code-block" style="margin-top: 8px;">
+Answer these 4 critical editor questions:
+1. How much and what research already exists?
+2. Is the topic novel, interesting and important?
+3. Is there a good rationale for the question?
+4. What other research efforts already exist?
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Search strategy instructions</h3>
+                        <div class="code-block">
+Step 1: Recent Literature (2022-2025)
+Search last 3 years using key concepts.
+Focus on: question, population,
+intervention, outcomes.
+
+Step 2: Expand if Sparse
+If <10 papers found, expand to 7 years.
+
+Step 3: Landmark Studies
+Search highly-cited foundational work.
+                        </div>
+                    </div>
+                </div>
+                <div class="snippet" style="margin-top: 12px;">
+                    <h3>Novelty evaluation criteria from prompt</h3>
+                    <pre>Novelty Level:
+- Highly Novel: Unexplored question or groundbreaking approach; <3 similar studies
+- Novel: Significant new angle, population, or methodology; meaningful advance
+- Incremental: Minor additions; confirms prior findings in new setting
+- Not Novel: Duplicates existing research
+
+Existing Research Volume:
+- Extensive: >50 highly relevant publications (last 3 years)
+- Moderate: 10-50 relevant publications
+- Limited: 3-10 relevant publications
+- Minimal: <3 relevant publications</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 11: Ethics Stack Part 1 -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Ethics Agent - Part 1</div>
+                <h2>Policy sources and compliance framework</h2>
+                <p class="lead">The ethics agent retrieves guidance from multiple authoritative sources and builds compliance checklists from the crawled content.</p>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Policy sources checked</h3>
+                        <ul>
+                            <li><strong>UKRI/MRC:</strong> UK Research and Innovation ethics requirements for medical research</li>
+                            <li><strong>NHS HRA:</strong> Health Research Authority decision tools and REC approval criteria</li>
+                            <li><strong>BMJ policies:</strong> Journal-specific publication ethics and author requirements</li>
+                            <li><strong>Declaration of Helsinki:</strong> Fundamental principles for medical research on humans</li>
+                            <li><strong>ICMJE:</strong> International Committee of Medical Journal Editors guidelines</li>
+                            <li><strong>COS:</strong> Center for Open Science preregistration standards</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>How retrieval works</h3>
+                        <div class="code-block">
+For EACH URL:
+1. First try get_url_content(url)
+   to retrieve cached content
+2. If get_url_content returns empty,
+   fallback to web_extract tool
+3. Extract ALL requirements, checklists,
+   and criteria from retrieved content
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.88rem;">The repo contains pre-crawled content at <code>backend/agents/ethics/crawled_data/</code> for faster access.</p>
+                    </div>
+                </div>
+                <div class="pill-row" style="margin-top: 8px;">
+                    <span class="pill teal">BMJ policy pages</span>
+                    <span class="pill olive">UKRI / MRC guidance</span>
+                    <span class="pill wine">NHS HRA decision tools</span>
+                    <span class="pill accent">Declaration of Helsinki</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 12: Ethics Stack Part 2 -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Ethics Agent - Part 2</div>
+                <h2>Evaluation process and sub-agents</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Main ethics compliance check</h3>
+                        <div class="code-block">
+## Step 3: Evaluate Against Extracted Checklists
+
+For EACH criterion extracted, provide:
+- Criterion: [Requirement text from guideline]
+- Source: [Specific URL where found]
+- Evidence: Quote from manuscript or "NOT FOUND"
+- Compliance: LOW/MEDIUM/HIGH
+- Reasoning: Why this rating, citing guideline
+
+## Step 4: Determine Overall Level
+
+- HIGH: All mandatory at HIGH, no LOW
+- MEDIUM: Most met, some at MEDIUM
+- LOW: Any mandatory criterion at LOW
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Secondary ethics checks</h3>
+                        <p>After the main pass, additional agents may run:</p>
+                        <ul style="margin-top: 8px;">
+                            <li><strong>Pre-specification agent:</strong> Reads Declaration of Helsinki via <code>file_read</code>, maps manuscript to relevant articles</li>
+                            <li><strong>Open science agent:</strong> Uses COS preregistration guidance, checks timeline consistency</li>
+                            <li><strong>Conflict-of-interest agent:</strong> Compares declared COIs with ORCID/publication history</li>
+                        </ul>
+                        <p style="margin-top: 8px; font-size: 0.88rem;">These only run if the initial ethics pass is not LOW.</p>
+                    </div>
+                </div>
+                <div class="snippet" style="margin-top: 12px;">
+                    <h3>COI agent excerpt</h3>
+                    <pre>Compare current declaration with ORCID and publication history.
+Highlight both DECLARED and UNDECLARED conflicts. Check ALL authors.
+
+Integrity Concerns levels:
+- None: No concerns found
+- Minor: Corrections or minor issues resolved
+- Moderate: Unresolved concerns or multiple corrections
+- Severe: Retractions, fraud allegations, or serious misconduct</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 13: Methodology Reporting Part 1 -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Methodology Reporting - Part 1</div>
+                <h2>Detecting the right reporting guideline</h2>
+                <p class="lead">The methodology agent first determines which EQUATOR reporting guideline applies to the study type.</p>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Study type classification</h3>
+                        <div class="code-block">
+## Analysis Approach
+
+1. Read Carefully: Focus on:
+   - Methods section for study design
+   - Abstract for study type/population
+   - Results for data types and analysis
+
+2. Key Indicators:
+   - Humans vs Animals
+   - Quantitative vs Qualitative
+   - Randomized Trial (look for
+     randomization, control groups)
+   - Review/Meta-analysis
+   - Observational (cohort, case-control)
+   - Diagnostic Test
+   - Prediction Model
+   - Case Report
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Guideline routing</h3>
+                        <p>Based on classification, the agent routes to:</p>
+                        <ul style="margin-top: 8px;">
+                            <li><strong>CONSORT:</strong> Randomized controlled trials</li>
+                            <li><strong>PRISMA:</strong> Systematic reviews and meta-analyses</li>
+                            <li><strong>STROBE:</strong> Observational studies</li>
+                            <li><strong>TRIPOD:</strong> Prediction models</li>
+                            <li><strong>CARE:</strong> Case reports</li>
+                        </ul>
+                        <p style="margin-top: 8px;">Local <code>flowchart.yaml</code> stores an EQUATOR decision tree. If the study doesn't fit standard categories, the agent searches the EQUATOR Network.</p>
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 8px;">
+                    <strong>EQUATOR fallback:</strong> <em>"If the study design doesn't clearly fit standard categories, use web_search to search the EQUATOR Network for specialized reporting guidelines."</em>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 14: Methodology Reporting Part 2 -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Methodology Reporting - Part 2</div>
+                <h2>Parallel compliance assessment</h2>
+                <p class="lead">Once the guideline is determined, three specialized sub-agents evaluate compliance in parallel.</p>
+                <div class="three-col">
+                    <div class="card">
+                        <h3>Guidelines Specialist</h3>
+                        <p>Qualitative assessment: strengths, gaps, and methodology issues.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Checklist Auditor</h3>
+                        <p>Scores every checklist item. Uses <code>calculate_score</code> for quantitative compliance.</p>
+                    </div>
+                    <div class="card">
+                        <h3>CASP Analyzer</h3>
+                        <p>Loads appropriate CASP checklist from local files for methodological appraisal.</p>
+                    </div>
+                </div>
+                <div class="snippet" style="margin-top: 12px;">
+                    <h3>Checklist auditor prompt excerpt</h3>
+                    <pre>You are a Checklist Compliance Auditor. Evaluate EVERY item in the checklist.
+
+For each item, determine compliance status:
+- Fully Compliant (1.0): Explicitly addressed, specific details provided
+- Partially Compliant (0.5): Mentioned but lacks specificity, incomplete
+- Non-Compliant (0.0): Not mentioned, no evidence found
+
+## Self-Critique Process
+Before finalizing EACH item, ask yourself:
+1. "Am I using the same evidence standard as previous items?"
+2. "If I saw similar evidence for another item, would I score it the same?"
+3. "Can I point to specific text that justifies this score?"</pre>
+                </div>
+                <p style="margin-top: 8px; font-size: 0.9rem;">CASP checklists are stored locally at <code>casp_checklists/randomised_control_trials</code>, <code>cohort_study</code>, <code>qualitative</code>, etc.</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 15: Integrity Agent -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Integrity Agent</div>
+                <h2>Author verification is search-heavy</h2>
+                <p class="lead">The integrity agent checks author history across multiple databases, with explicit instructions for handling ambiguity.</p>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>The three key questions</h3>
+                        <div class="code-block">
+Your role is to answer these questions
+for each author:
+
+1. Do the author(s) have any papers on
+   PubPeer with unanswered integrity
+   concerns? Have they had content
+   retracted before?
+
+2. Do the author(s) have ORCID/online
+   presence, and have they published
+   in this topic area?
+
+3. Check integrity indicators: H-index,
+   publication patterns, affiliation
+   consistency
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Disambiguation strategy</h3>
+                        <div class="code-block">
+When multiple authors share the same name:
+
+1. Match affiliation: Compare submitted
+   affiliation with author profiles
+2. Match topic area: Check if publications
+   align with manuscript research field
+3. If still unclear: Note as "Unable to
+   verify - multiple matches"
+4. Don't guess: Document ambiguity rather
+   than making assumptions
+                        </div>
+                    </div>
+                </div>
+                <div class="snippet" style="margin-top: 12px;">
+                    <h3>Decision logic from prompt</h3>
+                    <pre>Decision Logic:
+- Proceed: No significant concerns found
+- Flag for Review: Minor concerns or unable to verify some authors
+- Reject: Severe integrity concerns (retractions, fraud, multiple red flags)
+
+Be thorough but efficient. Focus on red flags and significant findings.</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 16: Validation Agent -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Methodology Validation Agent</div>
+                <h2>Statistical verification is computation-heavy</h2>
+                <p class="lead">The validation agent can execute Python code to verify calculations, and has strict rules about what counts as an error.</p>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Verification tasks</h3>
+                        <div class="code-block">
+Task 1: Statistical Verification (Python)
+- Arithmetic: "298 of 511 (58.32%)"
+  execute: 298/511 * 100
+- Totals: Subgroup sums = reported totals
+- Text-table consistency: Cross-reference
+  ALL values across sections
+
+Task 2: Statistical Logic
+- P-value direction: "non-significant"
+  requires P > 0.05
+- CI coherence: If CI excludes null,
+  result must be significant
+- Sample size: N at each stage matches
+  flow diagram
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Faithfulness rules</h3>
+                        <div class="code-block">
+## CRITICAL
+
+- ONLY flag errors you can verify from
+  explicit manuscript text
+- NEVER infer values that aren't stated
+- NEVER assume calculations the authors
+  didn't report
+- If uncertain, mark confidence as "low"
+  rather than fabricating errors
+- Every error MUST have a direct quote
+  from the manuscript
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.88rem;">This prevents the agent from inventing errors that don't exist in the manuscript.</p>
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 8px;">
+                    <strong>CASP integration:</strong> Validation receives methodology reporting output. For each "Can't tell" item, it determines if it's a fundamental flaw or just a reporting gap.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 17: Synthesis Layer -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Synthesis Layer</div>
+                <h2>The last two agents rewrite and prioritize prior judgments</h2>
+                <div class="three-col">
+                    <div class="card">
+                        <h3>Baseline synthesizer</h3>
+                        <p>Reads all prior agent JSON results and applies an editorial decision framework spanning scope, novelty, methodology, and ethics.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Writer</h3>
+                        <p>Receives the synthesizer's structured decision and is explicitly told not to re-evaluate the manuscript or introduce new findings.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Editorial implication</h3>
+                        <p>Most substantive judgment is upstream. By the time the commentary is written, the main leverage is in how earlier prompts framed evidence.</p>
+                    </div>
+                </div>
+                <div class="snippet-grid" style="margin-top: 12px;">
+                    <div class="snippet">
+                        <h3>Synthesizer excerpt</h3>
+                        <pre>Review the complete assessment from six
+specialized agents and make a final
+editorial decision following BMJ's
+editorial criteria.
+
+Decision options:
+- Accept
+- Transfer
+- Reject
+- Further Investigation</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Writer excerpt</h3>
+                        <pre>You DO NOT re-evaluate the manuscript.
+DO NOT add findings not in the input.
+DO NOT change the decision.
+
+Transform structured fields into
+professional prose for editors.</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 18: Resource Map -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Resource Map</div>
+                <h2>What each agent is leaning on</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent</th>
+                            <th>Primary resource type</th>
+                            <th>Examples</th>
+                            <th>Risk to discuss with editors</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Scoping</td>
+                            <td>Local journal packs</td>
+                            <td><code>journal_scopes/*</code> packs, article types, scope summaries</td>
+                            <td>How complete and current are the journal-specific instructions?</td>
+                        </tr>
+                        <tr>
+                            <td>Novelty</td>
+                            <td>Live search</td>
+                            <td>OpenAlex, PubMed, Google Scholar, extracted papers</td>
+                            <td>What counts as enough saturation to justify rejection?</td>
+                        </tr>
+                        <tr>
+                            <td>Ethics</td>
+                            <td>Policy retrieval + cached crawls</td>
+                            <td>BMJ policies, UKRI/MRC, NHS HRA, Helsinki, COS, ICMJE</td>
+                            <td>Which policy sources are mandatory versus advisory?</td>
+                        </tr>
+                        <tr>
+                            <td>Integrity</td>
+                            <td>Author databases</td>
+                            <td>PubPeer, ORCID, OpenAlex, PubMed, Scholar</td>
+                            <td>How much ambiguity is acceptable before human review?</td>
+                        </tr>
+                        <tr>
+                            <td>Methodology</td>
+                            <td>Local checklists</td>
+                            <td>EQUATOR flowchart, CONSORT/STROBE/etc., CASP checklists</td>
+                            <td>Are we conflating poor reporting with poor science?</td>
+                        </tr>
+                        <tr>
+                            <td>Validation</td>
+                            <td>Executable verification</td>
+                            <td>Python tool, code interpreter, manuscript text</td>
+                            <td>Which calculation failures should be fatal?</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SLIDE 19: Feedback Prompts -->
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Feedback Prompts</div>
+                <h2>Questions to put in front of editors</h2>
+                <div class="three-col">
+                    <div class="card">
+                        <h3>Thresholds</h3>
+                        <ul>
+                            <li>Where should "transfer" end and "reject" begin?</li>
+                            <li>How much novelty is enough for desk review progression?</li>
+                            <li>Which ethics gaps are fixable versus fatal?</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Authority</h3>
+                        <ul>
+                            <li>Which guidance sources should dominate when sources conflict?</li>
+                            <li>Should BMJ policy outrank generic open science norms?</li>
+                            <li>When is a local checklist too stale to trust?</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Escalation</h3>
+                        <ul>
+                            <li>Which uncertainty patterns should force human review?</li>
+                            <li>What level of author-name ambiguity is acceptable?</li>
+                            <li>Should unusual study designs trigger specialist review by default?</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quote" style="margin-top: 14px;">
+                    The most valuable editorial feedback is likely to be about source authority, fatal-vs-fixable defects, and where the agents should stop pretending confidence.
+                </div>
+            </div>
+        </section>
+
+        <div class="footer">
+            <div id="slide-label">1 / 19</div>
+            <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+            <div class="nav-note">Use left/right arrow keys or space</div>
+        </div>
+    </div>
+
+    <script>
+        const slides = Array.from(document.querySelectorAll(".slide"));
+        const label = document.getElementById("slide-label");
+        const progressBar = document.getElementById("progress-bar");
+        let current = 0;
+
+        function render() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle("active", index === current);
+            });
+            label.textContent = `${current + 1} / ${slides.length}`;
+            progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+        }
+
+        function next() {
+            current = Math.min(current + 1, slides.length - 1);
+            render();
+        }
+
+        function prev() {
+            current = Math.max(current - 1, 0);
+            render();
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowRight" || event.key === " " || event.key === "PageDown") {
+                event.preventDefault();
+                next();
+            }
+            if (event.key === "ArrowLeft" || event.key === "PageUp") {
+                event.preventDefault();
+                prev();
+            }
+        });
+
+        render();
+    </script>
+</body>
+</html>

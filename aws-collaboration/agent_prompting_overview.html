@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMJ Article Fit - Agent Prompting Overview</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --ink: #17324d;
+            --paper: #f7fbff;
+            --paper-deep: #e8f1fb;
+            --accent: #005eb8;
+            --accent-soft: #4f8fd3;
+            --teal: #0f4c81;
+            --olive: #35627a;
+            --wine: #24466a;
+            --line: rgba(23, 50, 77, 0.12);
+            --shadow: 0 18px 60px rgba(9, 35, 64, 0.16);
+        }
+
+        body {
+            font-family: Charter, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(0, 94, 184, 0.16), transparent 28%),
+                radial-gradient(circle at top right, rgba(79, 143, 211, 0.18), transparent 30%),
+                linear-gradient(135deg, #f8fbff 0%, #edf4fb 48%, #e5eef9 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .deck {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grain {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
+            opacity: 0.25;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            padding: 48px 58px 72px;
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-shell {
+            flex: 1;
+            background: rgba(247, 251, 255, 0.88);
+            border: 1px solid rgba(28, 35, 49, 0.09);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            padding: 34px 38px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .title-slide .slide-shell {
+            justify-content: center;
+            align-items: flex-start;
+            background:
+                linear-gradient(140deg, rgba(255,255,255,0.82), rgba(243,248,255,0.94)),
+                radial-gradient(circle at right bottom, rgba(0, 94, 184, 0.15), transparent 35%);
+        }
+
+        .eyebrow {
+            font-family: Optima, "Avenir Next Condensed", Candara, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.82rem;
+            color: var(--teal);
+        }
+
+        h1, h2, h3 {
+            font-family: Optima, "Avenir Next Condensed", Candara, sans-serif;
+            font-weight: 700;
+            line-height: 1.05;
+        }
+
+        h1 {
+            font-size: clamp(2.8rem, 4.6vw, 5rem);
+            max-width: 980px;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 3vw, 3rem);
+            color: var(--accent);
+        }
+
+        h3 {
+            font-size: 1.12rem;
+            color: var(--teal);
+            margin-bottom: 8px;
+        }
+
+        p, li, td, th {
+            font-size: 1.03rem;
+            line-height: 1.55;
+        }
+
+        .lead {
+            font-size: 1.28rem;
+            max-width: 920px;
+            color: rgba(28, 35, 49, 0.9);
+        }
+
+        .meta {
+            font-size: 0.95rem;
+            color: rgba(28, 35, 49, 0.72);
+        }
+
+        .two-col,
+        .three-col {
+            display: grid;
+            gap: 18px;
+            flex: 1;
+        }
+
+        .two-col {
+            grid-template-columns: 1.05fr 0.95fr;
+        }
+
+        .three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 18px 20px;
+        }
+
+        .card ul {
+            margin-left: 18px;
+            display: grid;
+            gap: 7px;
+        }
+
+        .pill-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.72);
+            font-family: Optima, "Avenir Next Condensed", Candara, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .pill.accent { color: var(--accent); }
+        .pill.teal { color: var(--teal); }
+        .pill.olive { color: var(--olive); }
+        .pill.wine { color: var(--wine); }
+
+        .workflow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            align-items: start;
+        }
+
+        .step {
+            background: rgba(255,255,255,0.74);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 16px 16px 18px;
+            min-height: 180px;
+        }
+
+        .step-number {
+            font-family: Optima, "Avenir Next Condensed", Candara, sans-serif;
+            font-size: 0.8rem;
+            color: rgba(28, 35, 49, 0.56);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 8px;
+        }
+
+        .arrow-note {
+            font-size: 0.95rem;
+            color: rgba(28, 35, 49, 0.74);
+        }
+
+        .code-block {
+            background: #103a63;
+            color: #f5fbff;
+            border-radius: 18px;
+            padding: 16px 18px;
+            font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .snippet-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .snippet {
+            background: rgba(10, 52, 95, 0.96);
+            color: #eef7ff;
+            border-radius: 18px;
+            padding: 14px 16px;
+            border-top: 4px solid var(--accent-soft);
+        }
+
+        .snippet h3 {
+            color: #cfe7ff;
+            margin-bottom: 10px;
+        }
+
+        .snippet pre {
+            white-space: pre-wrap;
+            font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.55);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            font-family: Optima, "Avenir Next Condensed", Candara, sans-serif;
+            color: var(--accent);
+            background: rgba(190, 91, 46, 0.08);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .quote {
+            border-left: 4px solid var(--accent-soft);
+            padding-left: 16px;
+            color: rgba(28, 35, 49, 0.84);
+        }
+
+        .footer {
+            position: absolute;
+            left: 58px;
+            right: 58px;
+            bottom: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Optima, "Avenir Next Condensed", Candara, sans-serif;
+            font-size: 0.9rem;
+            color: rgba(28, 35, 49, 0.72);
+        }
+
+        .progress {
+            width: 220px;
+            height: 8px;
+            background: rgba(28, 35, 49, 0.12);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), var(--teal));
+            border-radius: 999px;
+            transition: width 0.2s ease;
+        }
+
+        .nav-note {
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1100px) {
+            body {
+                overflow: auto;
+            }
+
+            .deck {
+                height: auto;
+            }
+
+            .slide {
+                position: relative;
+                display: flex;
+                min-height: 100vh;
+                padding: 26px 18px 60px;
+            }
+
+            .slide:not(.active) {
+                display: none;
+            }
+
+            .slide-shell {
+                padding: 24px 20px;
+            }
+
+            .two-col,
+            .three-col,
+            .workflow,
+            .snippet-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer {
+                left: 18px;
+                right: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="deck">
+        <div class="grain"></div>
+
+        <section class="slide title-slide active">
+            <div class="slide-shell">
+                <div class="eyebrow">BMJ Article Fit</div>
+                <h1>How the editorial agents are prompted, grounded, and constrained</h1>
+                <p class="lead">
+                    A repo-based walkthrough of the prompting strategies and resource packs used across
+                    <code>backend/agents/</code>, designed to help editors judge what the agents are really leaning on.
+                </p>
+                <div class="pill-row">
+                    <span class="pill accent">Prompt decomposition</span>
+                    <span class="pill teal">Local guidance packs</span>
+                    <span class="pill olive">Search and retrieval tools</span>
+                    <span class="pill wine">Structured editorial outputs</span>
+                </div>
+                <p class="meta">Prepared from the current repository structure in <code>backend/agents</code> and <code>docs/presentation</code>.</p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Why Editors Should Care</div>
+                <h2>These agents are not one generic reviewer</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>What the system is doing</h3>
+                        <ul>
+                            <li>Breaking screening into narrower editorial questions: scope, novelty, ethics, integrity, reporting, statistical verification.</li>
+                            <li>Giving each sub-question a different prompt, a different tool set, and a different evidence base.</li>
+                            <li>Forcing most agents to return structured fields rather than free-form opinions.</li>
+                            <li>Passing outputs forward so later agents synthesize prior assessments instead of starting from scratch.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>What editorial feedback can improve</h3>
+                        <ul>
+                            <li>Whether the right evidence sources are being treated as authoritative.</li>
+                            <li>Whether the decision thresholds match real editorial practice.</li>
+                            <li>Whether the prompts over-weight reporting completeness versus scientific merit.</li>
+                            <li>Where transfer, reject, or further-investigation logic needs tighter policy language.</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="quote">
+                    The key question is not "Is the model smart?" It is "Which instructions and which evidence sources are steering each editorial judgment?"
+                </p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Workflow Map</div>
+                <h2>End-to-end editorial flow</h2>
+                <div class="workflow">
+                    <div class="step">
+                        <div class="step-number">Step 1</div>
+                        <h3>Gatekeepers</h3>
+                        <p>Scoping asks "fit for this journal?" Ethics asks "clear policy or compliance blockers?"</p>
+                        <p class="arrow-note">If gatekeepers fail, the workflow stops early.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">Step 2</div>
+                        <h3>Parallel analysis</h3>
+                        <p>Novelty, integrity, methodology reporting, and methodology validation work on narrower evidence streams.</p>
+                        <p class="arrow-note">Each agent gets its own prompt and resource layer.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">Step 3</div>
+                        <h3>Synthesis</h3>
+                        <p>Baseline synthesizer reads all prior JSON outputs and converts them into one editorial decision.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">Step 4</div>
+                        <h3>Commentary</h3>
+                        <p>Writer turns the structured decision into prose for editors. It is instructed not to re-evaluate.</p>
+                    </div>
+                </div>
+                <div class="code-block">scoping + ethics -> novelty + integrity + methodology reporting + methodology validation -> baseline synthesizer -> writer</div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Shared Prompting Patterns</div>
+                <h2>Five strategies repeated across the repo</h2>
+                <div class="three-col">
+                    <div class="card">
+                        <h3>1. Role-specialized prompts</h3>
+                        <p>Every agent is cast as a specific reviewer: "Scoping Specialist", "Guidelines Compliance Specialist", "editorial commentary writer", and so on.</p>
+                    </div>
+                    <div class="card">
+                        <h3>2. Retrieval before judgment</h3>
+                        <p>Prompts explicitly name files, URLs, or search tools to consult before making the decision.</p>
+                    </div>
+                    <div class="card">
+                        <h3>3. Structured outputs</h3>
+                        <p>Agents usually emit Pydantic-shaped decisions instead of unconstrained prose, which keeps downstream synthesis predictable.</p>
+                    </div>
+                    <div class="card">
+                        <h3>4. Few-shot guidance where needed</h3>
+                        <p>Scoping and novelty append sampled examples from local JSON files to calibrate rejection and fit judgments.</p>
+                    </div>
+                    <div class="card">
+                        <h3>5. Tool-constrained reasoning</h3>
+                        <p>The important distinction is not only the prompt text. It is prompt text plus tool access: `file_read`, gateway search, cached crawled pages, or Python execution.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Cross-cutting implementation habits</h3>
+                        <p>Most agents run with low temperature, prompt caching, and a clear evidence-first instruction style. Some add extended thinking for synthesis or validation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Scoping And Novelty</div>
+                <h2>Journal fit uses local scope packs; novelty uses live literature search</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Scoping agent</h3>
+                        <ul>
+                            <li>Prompt placeholders are templated with a journal slug and display name before execution.</li>
+                            <li>Decision prompt points the model to runtime journal packs under `journal_scopes/{journal}/scope_summary.txt` and `article_types.txt`.</li>
+                            <li>Transfer prompt uses `journal_scopes/metadata.json` plus candidate journal scope packs.</li>
+                            <li>Few-shot examples are appended from `backend/agents/scoping/prompts/few_shot_examples.json`.</li>
+                            <li>Judgment style: topic fit + study type fit + transfer/reject fallback.</li>
+                        </ul>
+                        <div class="code-block">Use file_read to access:
+- journal_scopes/{journal}/scope_summary.txt
+- journal_scopes/{journal}/article_types.txt</div>
+                    </div>
+                    <div class="card">
+                        <h3>Novelty agent</h3>
+                        <ul>
+                            <li>Prompt explicitly frames four editorial questions: how much literature exists, whether the topic is novel and important, whether the rationale is good, and what similar efforts exist.</li>
+                            <li>Relies on MCP search tools for OpenAlex, PubMed, Google Scholar, general web search, and content extraction.</li>
+                            <li>Uses search horizon rules: recent literature first, then expand if sparse, then landmark work.</li>
+                            <li>Can append example novelty rejections from `backend/agents/novelty/prompts/few_shot_examples.json`.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="snippet-grid">
+                    <div class="snippet">
+                        <h3>Scoping prompt excerpt</h3>
+                        <pre>You are a Scoping Specialist for {journal_name}.
+
+Your task: Evaluate if a manuscript fits
+{journal_name} based on BOTH topic
+relevance AND study type.</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Novelty prompt excerpt</h3>
+                        <pre>Answer these 4 critical editor questions:
+1. How much and what research already exists?
+2. Is the topic novel, interesting and important?
+3. Is there a good rationale?
+4. What other research efforts already exist?</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Ethics Stack</div>
+                <h2>Ethics combines cached policy content, live retrieval, and policy-specific sub-agents</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Primary compliance pass</h3>
+                        <ul>
+                            <li>The main ethics prompt injects named BMJ, UKRI/MRC, and NHS HRA URLs directly into the system prompt.</li>
+                            <li>It asks the model to first try `get_url_content(url)` for cached local copies, then fall back to gateway web extraction.</li>
+                            <li>It requires checklist extraction from each source before manuscript assessment.</li>
+                            <li>The repo contains a local crawl index at `backend/agents/ethics/crawled_data/metadata.json` plus cached pages under `crawled_data/`.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Secondary ethics checks</h3>
+                        <ul>
+                            <li>Pre-specification agent reads a local `guidelines/declaration_of_helsinki.txt` via `file_read` and maps manuscript evidence to relevant articles.</li>
+                            <li>Open science agent uses COS preregistration guidance and emphasizes date extraction plus timeline consistency.</li>
+                            <li>Conflict-of-interest agent uses BMJ policies, ICMJE guidance, ORCID, PubMed, OpenAlex, and web extraction to compare declared versus discovered conflicts.</li>
+                            <li>The workflow only runs these secondary checks after the first ethics pass is not low.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="pill-row">
+                    <span class="pill teal">BMJ policy pages</span>
+                    <span class="pill olive">UKRI / MRC guidance</span>
+                    <span class="pill wine">NHS HRA decision tools</span>
+                    <span class="pill accent">Declaration of Helsinki</span>
+                </div>
+                <div class="snippet-grid">
+                    <div class="snippet">
+                        <h3>Ethics prompt excerpt</h3>
+                        <pre>For EACH URL:
+1. First try get_url_content(url)
+2. If empty, fallback to web_extract
+3. Extract ALL requirements, checklists,
+   and criteria from the retrieved content</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>COI / policy style</h3>
+                        <pre>Compare current declaration with ORCID
+and publication history.
+
+Highlight both DECLARED and UNDECLARED
+conflicts. Check ALL authors.</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Methodology Reporting</div>
+                <h2>Reporting review is a two-stage prompt chain with local EQUATOR and CASP assets</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Stage 1: detect the right reporting guideline</h3>
+                        <ul>
+                            <li>`flowchart.yaml` stores a local EQUATOR decision tree.</li>
+                            <li>The methodology agent asks one yes/no question at a time, records the decision path, and routes to a guideline endpoint such as CONSORT, PRISMA, STROBE, CARE, or TRIPOD.</li>
+                            <li>If none of the standard categories fit, the prompt allows web search against the broader EQUATOR library.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Stage 2: parallel compliance assessment</h3>
+                        <ul>
+                            <li>Guidelines Specialist performs qualitative strengths, gaps, and methodology issues.</li>
+                            <li>Checklist Auditor scores every checklist item and uses `calculate_score_from_table` for quantitative compliance.</li>
+                            <li>CASP Analyzer chooses the right CASP checklist from local `casp_checklists/.../checklist.txt` files.</li>
+                            <li>A methodology synthesizer merges the three views into one compliance report.</li>
+                        </ul>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Local assets</th>
+                            <th>Examples in repo</th>
+                            <th>Editorial effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EQUATOR routing</td>
+                            <td>`flowchart.yaml`</td>
+                            <td>Decides which reporting standard should govern the paper.</td>
+                        </tr>
+                        <tr>
+                            <td>Guideline packs</td>
+                            <td>`guidelines/consort`, `guidelines/strobe`, `guidelines/prisma`, `guidelines/tripod`, `guidelines/care`</td>
+                            <td>Anchors reporting checks to specific checklist items.</td>
+                        </tr>
+                        <tr>
+                            <td>CASP packs</td>
+                            <td>`casp_checklists/randomised_control_trials`, `cohort_study`, `qualitative`, etc.</td>
+                            <td>Adds a methodological appraisal layer, not just a reporting layer.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="snippet-grid">
+                    <div class="snippet">
+                        <h3>Checklist auditor excerpt</h3>
+                        <pre>Evaluate EVERY item in the checklist.
+
+Before finalizing EACH item assessment:
+"Am I using the same evidence standard
+as previous items?"</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>CASP / reporting style</h3>
+                        <pre>First determine the study type,
+then use file_read to load the
+appropriate checklist, then conduct
+the appraisal.</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Integrity And Validation</div>
+                <h2>Integrity is search-heavy; validation is computation-heavy</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Integrity agent</h3>
+                        <ul>
+                            <li>The prompt is explicit about the evidence sequence: PubPeer, ORCID, OpenAlex, PubMed, Google Scholar, then general web context.</li>
+                            <li>It emphasizes author disambiguation using affiliation and topic area and instructs the model not to guess.</li>
+                            <li>The output is not just "concerns found"; it is a source-backed recommendation: proceed, flag, or reject.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Methodology validation agent</h3>
+                        <ul>
+                            <li>Prompt asks for arithmetic verification, text-table consistency checks, p-value logic, and detection of design flaws.</li>
+                            <li>It can execute Python through Code Interpreter, with `python_repl` as fallback.</li>
+                            <li>It also consumes methodology reporting output so CASP "Can't tell" findings can be reclassified as either reporting gaps or real flaws.</li>
+                            <li>Faithfulness rules are unusually strict: only flag errors that can be verified from explicit manuscript text.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="code-block">Validation prompt focus:
+1. Verify arithmetic and denominators
+2. Check text/table/figure consistency
+3. Test p-value and CI logic
+4. Flag only errors that can be explicitly verified</div>
+                <div class="snippet-grid">
+                    <div class="snippet">
+                        <h3>Validation prompt excerpt</h3>
+                        <pre>ONLY flag errors you can verify from
+explicit manuscript text.
+NEVER infer values that are not stated.
+Every error MUST have a direct quote.</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Integrity prompt excerpt</h3>
+                        <pre>When multiple authors share the same name:
+1. Match affiliation
+2. Match topic area
+3. If still unclear, document ambiguity
+4. Don't guess</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Synthesis Layer</div>
+                <h2>The last two agents mostly rewrite and prioritize prior machine judgments</h2>
+                <div class="three-col">
+                    <div class="card">
+                        <h3>Baseline synthesizer</h3>
+                        <p>Reads all prior agent JSON results from S3 using a fixed session-based key pattern and applies an editorial decision framework spanning scope, novelty, methodology, and ethics.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Writer</h3>
+                        <p>Receives the synthesizer's structured decision and is explicitly told not to re-evaluate the manuscript or introduce new findings.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Editorial implication</h3>
+                        <p>Most substantive judgment is upstream. By the time the commentary is written, the main leverage is in how earlier prompts framed evidence and thresholds.</p>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent</th>
+                            <th>Main inputs</th>
+                            <th>Prompt style</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Baseline synthesizer</td>
+                            <td>Scoping, ethics, novelty, integrity, reporting, validation JSON outputs</td>
+                            <td>Editorial policy synthesis with explicit decision options: Accept / Transfer / Reject / Further Investigation</td>
+                        </tr>
+                        <tr>
+                            <td>Writer</td>
+                            <td>Final structured decision only</td>
+                            <td>Transformation prompt: turn structured fields into professional prose without changing the decision</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="snippet-grid">
+                    <div class="snippet">
+                        <h3>Synthesizer excerpt</h3>
+                        <pre>Review the complete assessment from six
+specialized agents and make a final
+editorial decision following BMJ's
+editorial criteria.</pre>
+                    </div>
+                    <div class="snippet">
+                        <h3>Writer excerpt</h3>
+                        <pre>You DO NOT re-evaluate the manuscript.
+DO NOT add findings not in the input.
+DO NOT change the decision.</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Resource Map</div>
+                <h2>What each agent is leaning on</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent</th>
+                            <th>Primary resource type</th>
+                            <th>Examples</th>
+                            <th>Risk to discuss with editors</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Scoping</td>
+                            <td>Local journal packs</td>
+                            <td>Runtime `journal_scopes/*` packs, article types, scope summaries, metadata</td>
+                            <td>How complete and current are the journal-specific instructions?</td>
+                        </tr>
+                        <tr>
+                            <td>Novelty</td>
+                            <td>Live search and comparative literature review</td>
+                            <td>OpenAlex, PubMed, Google Scholar, extracted papers</td>
+                            <td>What counts as enough saturation to justify rejection?</td>
+                        </tr>
+                        <tr>
+                            <td>Ethics</td>
+                            <td>Policy retrieval plus cached crawls</td>
+                            <td>BMJ policies, UKRI/MRC, NHS HRA, Helsinki, COS, ICMJE</td>
+                            <td>Which policy sources are mandatory versus advisory?</td>
+                        </tr>
+                        <tr>
+                            <td>Integrity</td>
+                            <td>Author and concern databases</td>
+                            <td>PubPeer, ORCID, OpenAlex, PubMed, Scholar</td>
+                            <td>How much ambiguity is acceptable before escalating to human review?</td>
+                        </tr>
+                        <tr>
+                            <td>Methodology reporting</td>
+                            <td>Local checklists and decision trees</td>
+                            <td>EQUATOR flowchart, CONSORT/STROBE/etc., CASP checklists</td>
+                            <td>Are we conflating poor reporting with poor science?</td>
+                        </tr>
+                        <tr>
+                            <td>Methodology validation</td>
+                            <td>Executable verification</td>
+                            <td>Python tool, code interpreter, manuscript text, reporting output</td>
+                            <td>Which calculation or logic failures should be fatal?</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-shell">
+                <div class="eyebrow">Feedback Prompts</div>
+                <h2>Questions to put in front of editors</h2>
+                <div class="three-col">
+                    <div class="card">
+                        <h3>Thresholds</h3>
+                        <ul>
+                            <li>Where should "transfer" end and "reject" begin?</li>
+                            <li>How much novelty is enough for desk review progression?</li>
+                            <li>Which ethics gaps are fixable versus fatal?</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Authority</h3>
+                        <ul>
+                            <li>Which guidance sources should dominate when sources conflict?</li>
+                            <li>Should BMJ policy outrank generic open science norms in borderline cases?</li>
+                            <li>When is a local checklist too stale to trust?</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Escalation</h3>
+                        <ul>
+                            <li>Which uncertainty patterns should force human editorial review?</li>
+                            <li>What level of author-name ambiguity is acceptable?</li>
+                            <li>Should unusual study designs trigger methodology specialist review by default?</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="quote">
+                    The most valuable editorial feedback is likely to be about source authority, fatal-vs-fixable defects, and where the agents should stop pretending confidence.
+                </p>
+            </div>
+        </section>
+
+        <div class="footer">
+            <div id="slide-label">1 / 11</div>
+            <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+            <div class="nav-note">Use left/right arrow keys or space</div>
+        </div>
+    </div>
+
+    <script>
+        const slides = Array.from(document.querySelectorAll(".slide"));
+        const label = document.getElementById("slide-label");
+        const progressBar = document.getElementById("progress-bar");
+        let current = 0;
+
+        function render() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle("active", index === current);
+            });
+            label.textContent = `${current + 1} / ${slides.length}`;
+            progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+        }
+
+        function next() {
+            current = Math.min(current + 1, slides.length - 1);
+            render();
+        }
+
+        function prev() {
+            current = Math.max(current - 1, 0);
+            render();
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowRight" || event.key === " " || event.key === "PageDown") {
+                event.preventDefault();
+                next();
+            }
+            if (event.key === "ArrowLeft" || event.key === "PageUp") {
+                event.preventDefault();
+                prev();
+            }
+        });
+
+        render();
+    </script>
+</body>
+</html>

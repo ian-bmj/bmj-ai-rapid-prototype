@@ -1,0 +1,40 @@
+# =============================================================================
+# BMJ Pod Monitor - Local Development (Docker Compose)
+# =============================================================================
+# Usage:
+#   docker compose up --build
+#   Open http://localhost:5001
+#
+# This runs the full application locally using the filesystem for storage
+# (no AWS services required). Optionally set LLM_API_KEY for AI features.
+# =============================================================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: deploy/docker/Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_PORT=5001
+      - FLASK_DEBUG=1
+      - ENVIRONMENT=local
+      # Set your LLM API key for transcription/summarisation
+      # Supports: OPENAI_API_KEY, ANTHROPIC_API_KEY, or GOOGLE_API_KEY
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+    volumes:
+      # Mount local data directory for persistence across restarts
+      - ./backend/data:/app/backend/data
+      # Mount source code for live reload (dev mode)
+      - ./backend:/app/backend
+      - ./admin-app:/app/admin-app
+    command: ["python", "backend/app.py"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/api/podcasts"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

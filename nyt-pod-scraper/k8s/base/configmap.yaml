@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pod-monitor-config
+  namespace: pod-monitor
+data:
+  AWS_REGION: "eu-west-2"
+  ENVIRONMENT: "dev"
+  FLASK_PORT: "5001"
+  FLASK_DEBUG: "0"
+  # These are populated per-environment via overlays
+  AUDIO_BUCKET: ""
+  DATA_BUCKET: ""
+  PODCASTS_TABLE: ""
+  EPISODES_TABLE: ""
+  DISTRIBUTION_TABLE: ""
+  BEDROCK_MODEL_ID: ""
+  SENDER_EMAIL: ""

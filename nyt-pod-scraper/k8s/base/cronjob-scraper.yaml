@@ -1,0 +1,108 @@
+---
+# Scraper CronJob - runs every 6 hours
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pod-monitor-scraper
+  namespace: pod-monitor
+spec:
+  schedule: "0 */6 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: pod-monitor
+            component: scraper
+        spec:
+          serviceAccountName: pod-monitor
+          restartPolicy: OnFailure
+          containers:
+            - name: scraper
+              image: "REPLACE_ECR_URL:latest"
+              command: ["python", "backend/scraper.py"]
+              envFrom:
+                - configMapRef:
+                    name: pod-monitor-config
+              resources:
+                requests:
+                  memory: 256Mi
+                  cpu: 250m
+                limits:
+                  memory: 512Mi
+---
+# Daily digest CronJob - runs at 8am UTC
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pod-monitor-daily-digest
+  namespace: pod-monitor
+spec:
+  schedule: "0 8 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: pod-monitor
+            component: daily-digest
+        spec:
+          serviceAccountName: pod-monitor
+          restartPolicy: OnFailure
+          containers:
+            - name: daily-digest
+              image: "REPLACE_ECR_URL:latest"
+              command: ["python", "-c", "from backend.email_generator import generate_daily; generate_daily()"]
+              envFrom:
+                - configMapRef:
+                    name: pod-monitor-config
+              resources:
+                requests:
+                  memory: 256Mi
+                  cpu: 250m
+                limits:
+                  memory: 512Mi
+---
+# Weekly digest CronJob - runs at 8am UTC every Monday
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pod-monitor-weekly-digest
+  namespace: pod-monitor
+spec:
+  schedule: "0 8 * * 1"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: pod-monitor
+            component: weekly-digest
+        spec:
+          serviceAccountName: pod-monitor
+          restartPolicy: OnFailure
+          containers:
+            - name: weekly-digest
+              image: "REPLACE_ECR_URL:latest"
+              command: ["python", "-c", "from backend.email_generator import generate_weekly; generate_weekly()"]
+              envFrom:
+                - configMapRef:
+                    name: pod-monitor-config
+              resources:
+                requests:
+                  memory: 256Mi
+                  cpu: 250m
+                limits:
+                  memory: 512Mi
